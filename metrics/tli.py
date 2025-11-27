@@ -1,22 +1,11 @@
-"""
-TLI — Trait Leakage Index (trait-linked features)
-
-Implements:
-- TRAIN allele-frequency & MAF with optional alpha smoothing
-- Rare-burden feature construction (per-chromosome + global)
-- Exposure (MIA) via 1-NN distance to S and AUC mapping
-- Uniqueness/collision-based rarity test with smoothing and carrier-floor
-- Top-level compute_tli() returning all components + final score
-"""
 from __future__ import annotations
-
 from typing import Dict, Iterable, Tuple
 
 import numpy as np
+
 from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import roc_auc_score
 
-# ------------------- helper functions -------------------
 def train_maf(G_tr, alpha: float = 0.0):
     G_tr  = np.asarray(G_tr, float)
     nobs  = np.sum(~np.isnan(G_tr), axis=0)
@@ -50,12 +39,7 @@ def r_mia_exposure(C_tr, C_ho, C_syn):
     r   = max(0.0, min(1.0, 2*(auc - 0.5)))
     return r, float(auc)
 
-def r_uniq_collision(G_syn, G_tr,
-                     rare_mask=None,
-                     maf_thresh: float = 1e-3,
-                     alpha: float = 1e-3,
-                     k_minor: int = 1,
-                     min_train_calls_frac: float = 0.8):
+def r_uniq_collision(G_syn, G_tr, rare_mask=None, maf_thresh: float = 1e-3, alpha: float = 1e-3, k_minor: int = 1, min_train_calls_frac: float = 0.8):
     p_hat, maf_hat, nobs_tr = train_maf(G_tr, alpha=alpha)
 
     ntr_eff   = np.maximum(nobs_tr, 1)
@@ -92,9 +76,7 @@ def r_uniq_collision(G_syn, G_tr,
            "min_train_calls": int(min_calls)}
     return U, U0, r, dbg
 
-def compute_tli(G_tr, G_ho, G_syn, var_chr,
-                maf_thresh: float = 1e-3, alpha: float = 1e-3,
-                k_minor: int = 1, min_train_calls_frac: float = 0.8):
+def compute_tli(G_tr, G_ho, G_syn, var_chr, maf_thresh: float = 1e-3, alpha: float = 1e-3, k_minor: int = 1, min_train_calls_frac: float = 0.8):
     _, maf_tr, _ = train_maf(G_tr, alpha=alpha)
     n_train = max(G_tr.shape[0], 1)
     global_floor = 1.0 / (2.0 * n_train)
@@ -122,4 +104,3 @@ __all__ = [
     "r_uniq_collision",
     "compute_tli",
 ]
-0.001
