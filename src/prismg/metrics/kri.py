@@ -6,10 +6,6 @@ from typing import Dict, Iterable, Optional, Tuple
 from prismg.utils.grm import standardize_by_af, compute_grm, _symmetrize 
 from prismg.score import clamp01
 
-def count_close_pairs(K: np.ndarray, theta: float) -> int:
-    iu = np.triu_indices_from(K, 1)
-    return int(np.sum(K[iu] >= theta))
-
 def permute_matrix_rows_cols(K: np.ndarray, rng: np.random.Generator) -> np.ndarray:
     idx = rng.permutation(K.shape[0])
     return K[np.ix_(idx, idx)]
@@ -31,7 +27,14 @@ def replay_M(K_real: np.ndarray, K_syn: np.ndarray, theta: float = 0.125, tau: f
             hits += 1
     return float(hits) / float(rclose.size)
 
-def internal_kinship_excess(K_syn: np.ndarray, K_safe: Optional[np.ndarray] = None, K_ho: Optional[np.ndarray] = None, theta_list: Iterable[float] = (0.10, 0.125, 0.25), n_boot: int = 200, seed: int = 42) -> Tuple[float, Dict[float, float]]:
+def replay_risk(K_ho: np.ndarray, K_syn: np.ndarray, theta: float = 0.125, tau: float = 0.02, n_boot: int = 200, seed: int = 123) -> float:
+    rng = np.random.default_rng(seed)
+    M  = replay_M(K_ho, K_syn, theta=theta, tau=tau)
+    M0 = np.mean([replay_M(K_ho, permute_matrix_rows_cols(K_syn, rng), theta, tau) for _ in range(n_boot)])
+    r_replay = clamp01(0.0 if M <= M0 else (M - M0) / (1.0 - M0 + 1e-12))
+    return r_replay, dict(obs = M, base = M0)
+
+def internal_kinship_excess(K_syn: np.ndarray, K_ho: np.ndarray, theta_list: Iterable[float] = (0.10, 0.125, 0.25), n_boot: int = 200, seed: int = 123) -> Tuple[float, Dict[float, float]]:
     rng = np.random.default_rng(seed)
     iu = np.triu_indices_from(K_syn, 1)
     v_syn = K_syn[iu]
@@ -43,18 +46,10 @@ def internal_kinship_excess(K_syn: np.ndarray, K_safe: Optional[np.ndarray] = No
     breakdown: Dict[float, float] = {}
     for theta in theta_list:
         f = frac_ge(v_syn, theta)
-        if K_safe is not None:
-            iu_s = np.triu_indices_from(K_safe, 1)
-            v0_full = K_safe[iu_s]; m = v_syn.size
-            f0 = float(np.mean([frac_ge(v0_full[rng.integers(0, v0_full.size, m)], theta)
-                                for _ in range(n_boot)]))
-        elif K_ho is not None:
-            iu_r = np.triu_indices_from(K_ho, 1)
-            v0_full = K_ho[iu_r]; m = v_syn.size
-            f0 = float(np.mean([frac_ge(v0_full[rng.integers(0, v0_full.size, m)], theta)
-                                for _ in range(n_boot)]))
-        else:
-            f0 = f
+        iu_r = np.triu_indices_from(K_ho, 1)
+        v0_full = K_ho[iu_r]; m = v_syn.size
+        f0 = float(np.mean([frac_ge(v0_full[rng.integers(0, v0_full.size, m)], theta) for _ in range(n_boot)]))
+        
         r = 0.0 if f <= f0 else (f - f0) / (1.0 - f0 + 1e-12)
         r = clamp01(r)
         r_list.append(r)
@@ -122,7 +117,7 @@ def hap_collision_rate(G: np.ndarray, var_chr: Iterable,*, window_k: int = 8, st
     cmax = float(np.max(rho_list))
     return c, cmax
 
-def hap_collision_risk(G_syn: np.ndarray, var_chr: Iterable, G_safe: Optional[np.ndarray] = None, G_ho: Optional[np.ndarray] = None, *, window_k: int = 8, stride: int = 4, min_poly: int = 6, n_boot: int = 200, seed: int = 1) -> Tuple[float, Dict[str, float]]:
+def hap_collision_risk(G_syn: np.ndarray, var_chr: Iterable, G_ho:np.ndarray, *, window_k: int = 8, stride: int = 4, min_poly: int = 6, n_boot: int = 200, seed: int = 123) -> Tuple[float, Dict[str, float]]:
     rng = np.random.default_rng(seed)
     # observed c and cmax on SYN
     c, cmax = hap_collision_rate(G_syn, var_chr, window_k=window_k, stride=stride, min_poly=min_poly)
@@ -130,14 +125,7 @@ def hap_collision_risk(G_syn: np.ndarray, var_chr: Iterable, G_safe: Optional[np
     def boot_c(Gb: np.ndarray) -> float:
         cb, _ = hap_collision_rate(Gb, var_chr, window_k=window_k, stride=stride, min_poly=min_poly)
         return cb
-
-    if G_safe is not None:
-        c0s = [boot_c(G_safe) for _ in range(n_boot)]
-    elif G_ho is not None:
-        c0s = [boot_c(G_ho) for _ in range(n_boot)]
-    else:
-        c0s = [c] * n_boot
-
+    c0s = [boot_c(G_ho) for _ in range(n_boot)]
     c0 = float(np.mean(c0s))
 
     eps = 1e-12
@@ -145,7 +133,6 @@ def hap_collision_risk(G_syn: np.ndarray, var_chr: Iterable, G_safe: Optional[np
         r = 0.0
     else:
         r = (c - c0) / (cmax - c0 + eps)
-
     return clamp01(r), dict(obs=c, base=c0, cmax=cmax)
 
 def spectral_inflation(K: np.ndarray) -> float:
@@ -159,54 +146,42 @@ def spectral_inflation(K: np.ndarray) -> float:
     tr = float(np.trace(K))
     return lam1 / (tr + 1e-12)
 
-def spectral_risk(K_syn: np.ndarray, K_base: Optional[np.ndarray] = None) -> Tuple[float, Dict[str, float]]:
+def spectral_risk(K_syn: np.ndarray, K_base: np.ndarray) -> Tuple[float, Dict[str, float]]:
     K_syn = _symmetrize(np.asarray(K_syn, dtype=float))
     s = spectral_inflation(K_syn)
-
-    if K_base is None:
-        s0 = s
-    else:
-        K_base = _symmetrize(np.asarray(K_base, dtype=float))
-        s0 = spectral_inflation(K_base)
-
+    
+    K_base = _symmetrize(np.asarray(K_base, dtype=float))
+    s0 = spectral_inflation(K_base)
     r = 0.0 if s <= s0 else (s - s0) / (s + 1e-12)
     return clamp01(r), dict(obs=s, base=s0)
 
-def compute_kri(G_tr, G_ho, G_syn, var_chr, G_safe=None, theta=0.125, tau=0.02, ike_thetas=(0.10, 0.125, 0.25), n_boot=200, seed=42, use_replay=True) -> Dict:
+def compute_kri(G_tr, G_ho, G_syn, var_chr, theta=0.125, tau=0.02, ike_thetas=(0.10, 0.125, 0.25), n_boot=200, seed=123) -> Dict:
     rng = np.random.default_rng(seed)
     X_tr, _  = standardize_by_af(G_tr, G_tr)
     X_ho, _  = standardize_by_af(G_ho, G_tr)
     X_syn, _ = standardize_by_af(G_syn, G_tr)
     K_ho  = compute_grm(X_ho)
     K_syn = compute_grm(X_syn)
-    K_safe = None if G_safe is None else compute_grm(standardize_by_af(G_safe, G_tr)[0])
-      
-    if use_replay and count_close_pairs(K_ho, theta) > 0:
-        M  = replay_M(K_ho, K_syn, theta=theta, tau=tau)
-        M0 = np.mean([replay_M(K_ho, permute_matrix_rows_cols(K_syn, rng), theta, tau)
-                      for _ in range(n_boot)])
-        r_replay = clamp01(0.0 if M <= M0 else (M - M0) / (1.0 - M0 + 1e-12))
-    else:
-        r_replay = 0.0
-       
-    r_IKE, ike_breakdown = internal_kinship_excess(K_syn, K_safe=K_safe, K_ho=K_ho,
-                                                  theta_list=ike_thetas, n_boot=n_boot, seed=seed)
-    r_HAP, hap_info = hap_collision_risk(G_syn, var_chr, G_safe=G_safe, G_ho=G_ho,
-                                         window_k=8, stride=4, min_poly=6,
-                                         n_boot=n_boot, seed=seed)
-    K_base_for_spec = K_safe if K_safe is not None else K_ho
+
+    r_replay, replay_info = replay_risk(K_ho = K_ho, K_syn = K_syn, theta = theta, tau = tau, n_boot = n_boot,seed = seed)
     
+    r_IKE, ike_breakdown = internal_kinship_excess(K_syn, K_ho=K_ho,theta_list=ike_thetas, n_boot=n_boot, seed=seed)
+    r_HAP, hap_info = hap_collision_risk(G_syn, var_chr, G_ho=G_ho, window_k=8, stride=4, min_poly=6, n_boot=n_boot, seed=seed)
+    
+    K_base_for_spec = K_ho
     r_SPEC, spec_info = spectral_risk(K_syn, K_base_for_spec)
     KRI = max(r_replay, r_IKE, r_HAP, r_SPEC)
+    
     return {"r_replay": float(r_replay), "r_IKE": float(r_IKE),
             "r_HAP": float(r_HAP), "r_SPEC": float(r_SPEC),
             "KRI": float(KRI),
-            "debug": {"ike_breakdown": ike_breakdown,
+            "debug": {"replay": replay_info ,"ike_breakdown": ike_breakdown,
                       "hap": hap_info, "spec": spec_info}}
 
 __all__ = [
     "compute_kri",
-    "pedigree_replay_M",
+    "replay_M",
+    "replay_risk",
     "internal_kinship_excess",
     "hap_collision_rate",
     "hap_collision_risk",

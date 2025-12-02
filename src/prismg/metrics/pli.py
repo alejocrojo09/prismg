@@ -8,7 +8,7 @@ from sklearn.neighbors import NearestNeighbors
 from prismg.utils.grm import standardize_by_af, filter_monomorphic
 from prismg.score import clamp01
 
-def fit_pca(X, n_components: int = 10, random_state: int = 42, randomized: bool = True):
+def fit_pca(X, n_components: int = 10, random_state: int = 123, randomized: bool = True):
     X = np.asarray(X, dtype=np.float32)
     p = PCA(
         n_components=n_components,
@@ -59,7 +59,7 @@ def pli_metrics(X_ho: np.ndarray, X_syn: np.ndarray, q: float = 0.01) -> Dict[st
         "PLI": pli_val,
     }
     
-def compute_pli(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, n_components: int = 10, random_state: int = 42, q: float = 0.01, *, randomized_pca: bool = True, use_filter_monomorphic: bool = True, mono_tol: float = 1e-8) -> Dict[str, object]:
+def compute_pli(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, n_components: int = 10, random_state: int = 123, q: float = 0.01, *, randomized_pca: bool = True, use_filter_monomorphic: bool = True, mono_tol: float = 1e-8) -> Dict[str, object]:
     # Standardize using TRAIN allele frequencies
     G_tr_std, _  = standardize_by_af(G_tr, G_tr, dtype=np.float32)
     if use_filter_monomorphic:
