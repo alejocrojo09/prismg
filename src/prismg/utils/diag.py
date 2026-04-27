@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from metrics.pli import compute_pli
-from score import clamp01
+from prismg.metrics.pli import compute_pli
+from prismg.score import clamp01
 
 
 def per_sample_pli_table(d_syn: np.ndarray, d_real: np.ndarray, sample_names: Optional[Sequence[str]] = None, eps: float = 1e-12) -> pd.DataFrame:
