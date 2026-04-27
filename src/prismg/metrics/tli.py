@@ -95,7 +95,7 @@ def compute_tli(G_tr, G_ho, G_syn, var_chr, maf_thresh: float = 1e-3, alpha: flo
         k_minor=k_minor, min_train_calls_frac=min_train_calls_frac
     )
     return {"MIA_AUC": auc, "r_mia": r_mia, "U": U, "U0": U0,
-            "r_uniq": r_uniq, "TLI_final": max(r_mia, r_uniq), "dbg": dbg}
+            "r_uniq": r_uniq, "TLI": max(r_mia, r_uniq), "dbg": dbg}
 
 __all__ = [
     "train_maf",
