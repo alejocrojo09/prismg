@@ -2,11 +2,37 @@ from __future__ import annotations
 from typing import Dict, Iterable, Tuple
 
 import numpy as np
+from score import _aggregate
 
 from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import roc_auc_score
 
 def train_maf(G_tr, alpha: float = 0.0):
+    """Estimate per-SNP allele frequencies and MAF from the training matrix.
+ 
+    Parameters
+    ----------
+    G_tr : np.ndarray
+        Training genotype dosage matrix, values in
+        {0, 1, 2} or NaN. NaN entries are excluded from frequency
+        estimation.
+    alpha : float, default=0.0
+        Pseudocount for Laplace smoothing. When ``alpha > 0``, the
+        allele frequency is estimated as
+        ``(alt_count + alpha) / (2 * n_obs + 2 * alpha)``, which
+        prevents zero frequencies for variants unseen in training.
+        When ``alpha=0``, the maximum-likelihood estimate is used.
+ 
+    Returns
+    -------
+    p : np.ndarray
+        Estimated ALT allele frequency per SNP.
+    maf : np.ndarray
+        Minor allele frequency per SNP.
+    nobs : np.ndarray
+        Number of non-NaN observations per SNP.
+    """
+
     G_tr  = np.asarray(G_tr, float)
     nobs  = np.sum(~np.isnan(G_tr), axis=0)
     alt   = np.nansum(G_tr, axis=0)
@@ -20,6 +46,25 @@ def train_maf(G_tr, alpha: float = 0.0):
     return p, maf, nobs
 
 def rare_burden_features(G, rare_mask, var_chr):
+    """Compute per-individual rare-variant burden features by chromosome.
+
+    Parameters
+    ----------
+    G : np.ndarray
+        Genotype dosage matrix.
+    rare_mask : np.ndarray
+        Boolean mask indicating which SNP columns are
+        considered rare.
+    var_chr : iterable
+        Per-SNP chromosome labels in the same column order as ``G``.
+    Returns
+    -------
+    X : np.ndarray
+        Rare-burden feature matrix.
+    names : list of str
+        Feature names, one per column of ``X``: ``["rare_chr1",
+        "rare_chr2", ..., "rare_global"]``.
+    """
     chroms = [c for c in sorted({str(x) for x in var_chr}) if c.isdigit() and 1 <= int(c) <= 22]
     idx_by_chr = {c: np.where(rare_mask & (np.array(var_chr) == c))[0] for c in chroms}
     feats = [np.nansum(G[:, idx_by_chr[c]], axis=1) if len(idx_by_chr[c]) else np.zeros(G.shape[0])
@@ -30,6 +75,26 @@ def rare_burden_features(G, rare_mask, var_chr):
     return X, names
 
 def r_mia_exposure(C_tr, C_ho, C_syn):
+    """Compute a Membership Inference Attack (MIA) exposure score via rare-burden proximity.
+ 
+    Parameters
+    ----------
+    C_tr : np.ndarray
+        Rare-burden feature matrix for the training cohort.
+    C_ho : np.ndarray
+        Rare-burden feature matrix for the holdout cohort.
+    C_syn : np.ndarray
+        Rare-burden feature matrix for the synthetic cohort.
+ 
+    Returns
+    -------
+    r_mia : float
+        MIA exposure risk score in [0, 1]. Maps AUC=0.5 to 0.0 (no
+        signal) and AUC=1.0 to 1.0 (maximally leaky).
+    auc : float
+        Raw AUC value in [0.5, 1.0] from the nearest-synthetic-neighbour
+        distance discrimination test.
+    """
     nn = NearestNeighbors(n_neighbors=1, metric="manhattan").fit(C_syn)
     d_tr = nn.kneighbors(C_tr, 1, return_distance=True)[0][:,0]
     d_ho = nn.kneighbors(C_ho, 1, return_distance=True)[0][:,0]
@@ -40,6 +105,57 @@ def r_mia_exposure(C_tr, C_ho, C_syn):
     return r, float(auc)
 
 def r_uniq_collision(G_syn, G_tr, rare_mask=None, maf_thresh: float = 1e-3, alpha: float = 1e-3, k_minor: int = 1, min_train_calls_frac: float = 0.8):
+    """Test whether rare variants in the synthetic cohort are shared beyond HWE expectation.
+
+    Parameters
+    ----------
+    G_syn : np.ndarray
+        Synthetic genotype dosage matrix.
+    G_tr : np.ndarray
+        Training genotype dosage matrix. Used to
+        estimate allele frequencies and define rare variants.
+    rare_mask : np.ndarray, optional
+        Boolean mask of shape pre-selecting candidate rare
+        variants.
+    maf_thresh : float, default=1e-3
+        MAF threshold below which a variant is considered rare. The
+        effective threshold per variant is
+        ``max(maf_thresh, k_minor / (2 * n_obs))``, which avoids
+        calling variants rare when there is insufficient training data
+        to estimate their frequency reliably.
+    alpha : float, default=1e-3
+        Pseudocount for Laplace-smoothed AF estimation.
+    k_minor : int, default=1
+        Minimum minor allele count in training required for a variant
+        to be included. Combined with ``maf_thresh`` to produce a
+        per-variant effective MAF floor.
+    min_train_calls_frac : float, default=0.8
+        Minimum fraction of training individuals required to have a
+        non-missing call at a variant for it to be included. Variants
+        with too many missing calls have unreliable AF estimates.
+ 
+    Returns
+    -------
+    U : float
+        Observed fraction of qualifying rare variants with ≥ 2 carriers
+        in the synthetic cohort.
+    U0 : float
+        HWE-expected fraction (analytical null). 
+    r_uniq : float
+        Unique collision risk score in [0, 1],
+    dbg : dict
+        Diagnostic dictionary with keys:
+ 
+        - "n_rare": number of variants passing the MAF/mask filter.
+        - "n_used": number of variants with ≥ 2 non-missing synthetic
+          calls (used in the final U/U0 computation).
+        - "U", "U0": as above.
+        - "mean_n_eff": mean number of non-missing synthetic
+          individuals across used variants.
+        - "min_train_calls": minimum non-missing call count threshold
+          applied.
+    """
+    
     p_hat, maf_hat, nobs_tr = train_maf(G_tr, alpha=alpha)
 
     ntr_eff   = np.maximum(nobs_tr, 1)
@@ -76,7 +192,52 @@ def r_uniq_collision(G_syn, G_tr, rare_mask=None, maf_thresh: float = 1e-3, alph
            "min_train_calls": int(min_calls)}
     return U, U0, r, dbg
 
-def compute_tli(G_tr, G_ho, G_syn, var_chr, maf_thresh: float = 1e-3, alpha: float = 1e-3, k_minor: int = 1, min_train_calls_frac: float = 0.8):
+def compute_tli(G_tr, G_ho, G_syn, var_chr, maf_thresh: float = 1e-3, alpha: float = 1e-3, k_minor: int = 1, min_train_calls_frac: float = 0.8, agg: str = "max"):
+    """Compute the full Trait Leakage Index (TLI) for a synthetic cohort.
+ 
+    Parameters
+    ----------
+    G_tr : np.ndarray
+        Training genotype dosage matrix. Used for
+        AF estimation, rare-variant definition, and MIA feature building.
+    G_ho : np.ndarray
+        Holdout genotype dosage matrix. Serves as
+        the MIA negative class (non-members).
+    G_syn : np.ndarray
+        Synthetic genotype dosage matrix to evaluate.
+    var_chr : iterable
+        Per-SNP chromosome labels in column order to build per-chromosome burden features.
+    maf_thresh : float, default=1e-3
+        MAF threshold for defining rare variants.
+    alpha : float, default=1e-3
+        Pseudocount for Laplace-smoothed AF estimation.
+    k_minor : int, default=1
+        Minimum minor allele count in training for a variant to
+        qualify as rare.
+    min_train_calls_frac : float, default=0.8
+        Minimum fraction of training individuals with non-missing calls
+        required at a variant.
+    agg : str, default="max"
+        Aggregation method for combining ``r_mia`` and ``r_uniq`` into
+        the final TLI. One of ``"max"``, ``"mean"``, or ``"median"``.
+ 
+    Returns
+    -------
+    dict
+        Result dictionary with the following keys:
+ 
+        - "MIA_AUC" (float): raw AUC from the MIA proximity test.
+          0.5 = no signal, 1.0 = maximally leaky.
+        - "r_mia" (float): MIA exposure sub-score in [0, 1].
+        - "U" (float): observed fraction of rare variants with ≥ 2
+          carriers in the synthetic cohort.
+        - "U0" (float): HWE-expected fraction (analytical null).
+        - "r_uniq" (float): unique collision sub-score in [0, 1].
+        - "TLI" (float): aggregate Trait Leakage Index in [0, 1],
+          computed by applying ``agg`` to ``[r_mia, r_uniq]``.
+        - "dbg" (dict): diagnostic output from ``r_uniq_collision``.
+ 
+    """
     _, maf_tr, _ = train_maf(G_tr, alpha=alpha)
     n_train = max(G_tr.shape[0], 1)
     global_floor = 1.0 / (2.0 * n_train)
@@ -95,7 +256,7 @@ def compute_tli(G_tr, G_ho, G_syn, var_chr, maf_thresh: float = 1e-3, alpha: flo
         k_minor=k_minor, min_train_calls_frac=min_train_calls_frac
     )
     return {"MIA_AUC": auc, "r_mia": r_mia, "U": U, "U0": U0,
-            "r_uniq": r_uniq, "TLI": max(r_mia, r_uniq), "dbg": dbg}
+            "r_uniq": r_uniq, "TLI": _aggregate([r_mia, r_uniq], agg), "dbg": dbg}
 
 __all__ = [
     "train_maf",

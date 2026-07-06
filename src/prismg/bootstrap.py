@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from itertools import combinations
 from collections import Counter
 
-from prismg.score import clamp01, r_raw, calibrate_to_prism
+from score import clamp01, r_raw, calibrate_to_prism, fit_weights_anchor
 
 from matplotlib.colors import Normalize
 from matplotlib.cm import get_cmap, ScalarMappable
@@ -13,10 +13,37 @@ from matplotlib.cm import get_cmap, ScalarMappable
 plt.rcParams.update({"figure.dpi": 160, "font.size": 12})
 
 def rank_from_scores(scores, names):
+    """Sort candidate names from highest to lowest score.
+ 
+    Parameters
+    ----------
+    scores : sequence of float
+        Numeric scores for each candidate.
+    names : sequence of str
+        Candidate identifiers corresponding to each score.
+ 
+    Returns
+    -------
+    list of str
+    """
     order = np.argsort(-np.asarray(scores))
     return [names[i] for i in order]
 
 def kendall_tau_a(rank1_names, rank2_names):
+    """Compute Kendall's coefficient between two ranked orderings of the same items.
+ 
+    Parameters
+    ----------
+    rank1_names : list of str
+        Item names in the order defined by ranking 1.
+    rank2_names : list of str
+        Item names in the order defined by ranking 2.
+    Returns
+    -------
+    float
+        Kendall's rank coefficient.
+
+    """
     idx1 = {n:i for i,n in enumerate(rank1_names)}
     idx2 = {n:i for i,n in enumerate(rank2_names)}
     names = list(idx1.keys())
@@ -30,44 +57,29 @@ def kendall_tau_a(rank1_names, rank2_names):
     denom = len(names)*(len(names)-1)/2
     return (C-D)/denom if denom>0 else 0.0
 
-def _entropy_safe(p: np.ndarray) -> float:
-    p = np.asarray(p, float)
-    p_pos = p[p > 0.0]
-    if p_pos.size == 0:
-        return 0.0
-    return float(-(p_pos * np.log(p_pos)).sum())
-
-def fit_weights_anchor(r_safe, r_leak, eps=0.02, lam=0.80, gamma=1e-3, step=0.01, w0=None, tol=1e-12):
-    if w0 is None:
-        w0 = np.array([0, 0, 0], float)
-    w0 = np.asarray(w0, float)
-
-    best_loss, best_w = np.inf, np.array([0, 0, 0], float)
-    grid = np.arange(0, 1 + 1e-12, step)
-
-    for w1 in grid:
-        for w2 in grid:
-            w3 = 1 - w1 - w2
-            if w3 < 0:
-                continue
-            w = np.array([w1, w2, w3], float)
-            loss = (r_raw(r_safe, w) - eps) ** 2 + (r_raw(r_leak, w) - lam) ** 2 + gamma * np.sum((w - w0) ** 2)
-
-            if loss + tol < best_loss:
-                best_loss, best_w = loss, w
-            elif abs(loss - best_loss) <= tol:
-                if np.sum((w - w0) ** 2) + 1e-15 < np.sum((best_w - w0) ** 2):
-                    best_w = w
-                else:
-                    if _entropy_safe(w) > _entropy_safe(best_w) + 1e-12:
-                        best_w = w
-    return best_w
-
-def p_fmt_pow10(p, digits=1, B=None):
+def p_fmt_pow10(p, digits=1, n_boot=None):
+    """Format a p-value as a scientific-notation string with a base-10 exponent.
+ 
+    Parameters
+    ----------
+    p : float
+        The p-value to format. 
+    digits : int, default=1
+        Number of decimal places to show.
+    n_boot : int, optional
+        Number of bootstrap replicates used to compute p. When p
+        is exactly 0.0, the minimum detectable p-value is approximately
+        1/B, so the returned string is formatted as "<1x10^-a".
+ 
+    Returns
+    -------
+    str
+        The formatted string.
+    """
     if p <= 0.0:
-        if B is None:
+        if n_boot is None:
             return "<1x10^-∞"
-        a = math.ceil(math.log10(float(B)))  # min detectable ~ 1/B
+        a = math.ceil(math.log10(float(n_boot)))  # min detectable ~ 1/B
         return f"<1x10^-{a}"
     # use scientific notation then reformat
     m_str, e_str = f"{p:.{digits+1}e}".split("e")  # one extra digit for rounding
@@ -75,8 +87,83 @@ def p_fmt_pow10(p, digits=1, B=None):
     a = int(e_str)  # typically negative
     return f"{m:.{digits}f}x10^{a}"
 
-def bootstrap_analysis(df, B=1000, sigma=0.01, eps=0.02, lam=0.80, gamma=1e-3, w0=(0,0,0), refit_weights=False, step=0.01, random_state=123):
-    rng = np.random.default_rng(random_state)
+def bootstrap_analysis(df, n_boot=100, sigma=0.01, eps=0.02, lam=0.80, gamma=1e-3, w0=[0,0,0], refit_weights=False, step=0.01, random_seed=123):
+    """Assess PRISM-G score stability and pairwise significance via bootstrapping.
+ 
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input table with columns ``name``, ``role``, ``pli``, ``kri``,
+        ``tli``. ``role`` must be one of ``"safe anchor"``,
+        ``"leaky anchor"``, or ``"candidate"``.
+    n_boot : int, default=100
+        Number of bootstrap replicates.
+    sigma : float, default=0.01
+        Standard deviation of the Gaussian jitter applied to each anchor
+        metric score on every replicate.
+    eps : float, default=0.02
+        Target raw risk score for the safe anchor.
+    lam : float, default=0.80
+        Target raw risk score for the leaky anchor.
+    gamma : float, default=1e-3
+        Ridge regularization strength.
+    w0 : sequence of float, default=(0, 0, 0)
+        Ridge regularization anchor (the point ``w`` is penalized toward).
+    refit_weights : bool, default=False
+        If ``False`` (default), weights are fitted once on the un-jittered
+        anchor scores and reused for all ``n_boot`` replicates. This isolates
+        score variability, holding the weight vector
+        fixed. If ``True``, weights are refitted on every replicate, so both weight uncertainty and score
+        uncertainty are propagated; the returned ``weights_out`` is then a
+        dict with keys ``"mean"``, ``"sd"``, and ``"n"`` summarizing the
+        distribution of fitted weights across replicates.
+    step : float, default=0.01
+        Grid resolution.
+    random_seed : int, default=123
+        Random seed.
+
+    Returns
+    -------
+    weights_out : np.ndarray or dict
+        If ``refit_weights=False``: the single fixed weight vector
+        ``[w_PLI, w_KRI, w_TLI]`` used across all replicates.
+        If ``refit_weights=True``: a dict with keys "mean",
+        "sd", and "n", summarizing the per-replicate
+        fitted weights.
+    tbl_stats_R : pd.DataFrame
+        Per-candidate summary of raw ``R`` score distributions across
+        bootstrap replicates, sorted descending by ``mean_R``. Columns:
+        ``name``, ``mean_R``, ``sd_R``, ``ci95_R_lo``, ``ci95_R_hi``.
+    tbl_stats_G : pd.DataFrame
+        Per-candidate summary of calibrated PRISM-G score distributions,
+        sorted descending by ``mean_G``. Columns: ``name``, ``mean_G``,
+        ``sd_G``, ``ci95_G_lo``, ``ci95_G_hi``.
+    tbl_pvals : pd.DataFrame
+        All pairwise comparisons of PRISM-G scores (A vs B for every pair
+        of candidates), sorted ascending by ``p_two_sided``. Columns:
+        ``A_minus_B``, ``mean_diff``, ``ci95_diff_lo``, ``ci95_diff_hi``,
+        ``p_two_sided``, ``p_fmt``.
+    rank_strings : list of str
+        The full ranking string for each bootstrap replicate, formatted as
+        "name_A > name_B > ..." from highest to lowest PRISM-G score.
+    kendall_summary : dict
+        Summary of Kendall tau-a ranking stability. Keys:
+ 
+        - "baseline": the ranking string of the first replicate,
+          used as the reference ordering for all tau computations.
+        - "mean_tau", "sd_tau": mean and SD of tau across
+          all n_boot replicates relative to the baseline.
+        - "tau_ci95": ``[lo, hi]`` 2.5/97.5 percentile interval.
+        - "perm_null_mean", "perm_null_sd": mean and SD of tau
+          under a permutation null.
+        - "p_value_two_sided": two-sided permutation p-value
+          comparing ``mean_tau`` against the null distribution.
+        - "p_fmt": formatted p-value string from ``p_fmt_pow10``.
+    boot_G : dict of str -> list of float
+        Raw per-replicate PRISM-G score arrays keyed by candidate name.
+
+    """
+    rng = np.random.default_rng(random_seed)
     df = df.copy()
     idx_safe = df.index[df["role"]=="safe anchor"][0]
     idx_leak = df.index[df["role"]=="leaky anchor"][0]
@@ -97,7 +184,7 @@ def bootstrap_analysis(df, B=1000, sigma=0.01, eps=0.02, lam=0.80, gamma=1e-3, w
 
     def jitter(v): return np.clip(v + rng.normal(0, sigma), 0.0, 1.0)
 
-    for _ in range(B):
+    for _ in range(n_boot):
         r_safe = np.array([jitter(x) for x in r_safe0], float)
         r_leak = np.array([jitter(x) for x in r_leak0], float)
         w = fit_weights_anchor(r_safe, r_leak, eps=eps, lam=lam, gamma=gamma, step=step, w0=w0) if refit_weights else weights_fixed
@@ -140,15 +227,15 @@ def bootstrap_analysis(df, B=1000, sigma=0.01, eps=0.02, lam=0.80, gamma=1e-3, w
             "ci95_diff_lo": float(lo),
             "ci95_diff_hi": float(hi),
             "p_two_sided": p_two,
-            "p_fmt": p_fmt_pow10(p_two, digits=1, B=B)
+            "p_fmt": p_fmt_pow10(p_two, digits=1, n_boot=n_boot)
         })
     tbl_pvals = pd.DataFrame(rowsP).sort_values("p_two_sided").reset_index(drop=True)
 
     # Kendall τ on bootstrap rank strings
     baseline = rank_strings[0]
     taus = np.array([kendall_tau_a(rs.split(" > "), baseline.split(" > ")) for rs in rank_strings])
-    rng2 = np.random.default_rng(777)
-    perms = [" > ".join(rng2.permutation(cand_names)) for _ in range(2000)]
+    rng2 = np.random.default_rng(random_seed)
+    perms = [" > ".join(rng2.permutation(cand_names)) for _ in range(n_boot)]
     taus_null = np.array([kendall_tau_a(p.split(" > "), baseline.split(" > ")) for p in perms])
     p_tau = 2 * min(np.mean(taus_null >= np.mean(taus)), np.mean(taus_null <= np.mean(taus)))
     kendall_summary = {
@@ -159,21 +246,75 @@ def bootstrap_analysis(df, B=1000, sigma=0.01, eps=0.02, lam=0.80, gamma=1e-3, w
         "perm_null_mean": float(np.mean(taus_null)),
         "perm_null_sd": float(np.std(taus_null, ddof=1)),
         "p_value_two_sided": float(min(1.0, p_tau)),
-        "p_fmt": p_fmt_pow10(float(min(1.0, p_tau)), digits=1, B=B)
+        "p_fmt": p_fmt_pow10(float(min(1.0, p_tau)), digits=1, n_boot=n_boot)
     }
 
     weights_out = ({"mean": np.mean(w_history,0), "sd": np.std(w_history,0,ddof=1), "n": len(w_history)}
                    if refit_weights else weights_fixed)
     return weights_out, tbl_stats_R, tbl_stats_G, tbl_pvals, rank_strings, kendall_summary, boot_G
 
-def grid_search(df, eps_grid=(0.02, 0.04, 0.06, 0.08, 0.10), lam_grid=(0.75, 0.80, 0.85, 0.90), gamma_grid=(1e-4, 1e-3, 1e-2), *, B=600, sigma=0.01, w0=(0,0,0), step=0.01, refit_weights=True, random_state=123):
+def grid_search(df, eps_grid=(0.02, 0.04, 0.06, 0.08, 0.10), lam_grid=(0.75, 0.80, 0.85, 0.90), gamma_grid=(1e-4, 1e-3, 1e-2), *, n_boot=100, sigma=0.01, w0=(0,0,0), step=0.01, refit_weights=False, random_seed=123):
+    """Grid search evaluation: sweep over (eps, lam, gamma) configurations and rank them by ranking stability.
+ 
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input table passed directly to ``bootstrap_analysis``. Must contain
+        columns ``name``, ``role``, ``pli``, ``kri``, ``tli`` with exactly
+        one ``"safe anchor"`` and one ``"leaky anchor"`` row.
+    eps_grid : sequence of float, default=(0.02, 0.04, 0.06, 0.08, 0.10)
+        Values of ``eps`` (safe anchor target raw score) to sweep over.
+    lam_grid : sequence of float, default=(0.75, 0.80, 0.85, 0.90)
+        Values of ``lam`` (leaky anchor target raw score) to sweep over.
+    gamma_grid : sequence of float, default=(1e-4, 1e-3, 1e-2)
+        Values of ``gamma`` (ridge regularization strength) to sweep over.
+    n_boot : int, default=100
+        Number of bootstrap replicates per configuration.
+    sigma : float, default=0.01
+        Jitter standard deviation.
+    w0 : sequence of float, default=(0, 0, 0)
+        Ridge regularization initial weights.
+    step : float, default=0.01
+        Weight grid resolution.
+    refit_weights : bool, default=True
+        Whether to refit weights on every bootstrap replicate. Defaults
+        to ``True`` here (unlike ``bootstrap_analysis``'s default of
+        ``False``) so the grid search reflects weight uncertainty as well
+        as score uncertainty. When ``True``, the output DataFrame includes
+        per-metric weight mean and SD columns.
+    random_seed : int, default=123
+        Random seed.
+ 
+    Returns
+    -------
+    pd.DataFrame
+        One row per (eps, lam, gamma) combination, sorted descending by
+        ``(mean_tau, modal_prop)``. Columns:
+ 
+        - ``eps``, ``lam``, ``gamma``: the hyperparameter values for this
+          configuration.
+        - ``mean_tau``, ``sd_tau``: mean and SD of Kendall tau-a across
+          bootstrap replicates relative to the baseline ranking.
+        - ``tau_ci_lo``, ``tau_ci_hi``: 95% CI for tau.
+        - ``p_tau``: two-sided permutation p-value for the Kendall tau
+          test. 
+        - ``modal_rank``: the most frequently occurring ranking string
+          ("A > B > C > ...") across all ``n_boot`` replicates.
+        - ``modal_prop``: fraction of replicates that produced
+          ``modal_rank``.
+        - ``N_boot``: number of bootstrap replicates (always equals ``n_boot``).
+        - ``w_PLI_mean``, ``w_KRI_mean``, ``w_TLI_mean``,
+          ``w_PLI_sd``, ``w_KRI_sd``, ``w_TLI_sd`` *(only when*
+          ``refit_weights=True`` *)*: mean and SD of each fitted weight
+          across bootstrap replicates.
+    """
     rows = []
     for gam in gamma_grid:
         for eps in eps_grid:
             for lam in lam_grid:
                 weights_info, tblR, tblG, tblP, ranks, kend, boot_G = bootstrap_analysis(
-                    df, B=B, sigma=sigma, eps=eps, lam=lam, gamma=gam, w0=w0,
-                    refit_weights=refit_weights, step=step, random_state=random_state
+                    df, n_boot=n_boot, sigma=sigma, eps=eps, lam=lam, gamma=gam, w0=w0,
+                    refit_weights=refit_weights, step=step, random_seed=random_seed
                 )
 
                 # modal ranking across bootstraps
@@ -213,3 +354,8 @@ def grid_search(df, eps_grid=(0.02, 0.04, 0.06, 0.08, 0.10), lam_grid=(0.75, 0.8
         ["mean_tau", "modal_prop"], ascending=[False, False]
     ).reset_index(drop=True)
     return res
+
+__all__ = ["rank_from_scores", 
+         "kendall_tau_a",
+         "bootstrap_analysis",
+         "grid_search",]

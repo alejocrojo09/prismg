@@ -12,20 +12,47 @@ from prismg.score import clamp01
 
 
 def per_sample_pli_table(d_syn: np.ndarray, d_real: np.ndarray, sample_names: Optional[Sequence[str]] = None, eps: float = 1e-12) -> pd.DataFrame:
-    """
-    Build per-HO-sample PLI diagnostics table.
-
-    Columns
+    """Build a per-holdout-sample PLI diagnostics table.
+ 
+    Parameters
+    ----------
+    d_syn : np.ndarray
+        Per-sample distance to the nearest synthetic neighbour.
+    d_real : np.ndarray
+        Per-sample distance to the nearest other holdout neighbour
+        (the null baseline).
+    sample_names : sequence of str, optional
+        Identifiers for each holdout sample. If ``None``, samples are
+        labelled "HO_0", "HO_1", etc.
+    eps : float, default=1e-12
+        Small constant added to ``d_real`` when computing the ratio
+        ``d_syn / d_real``, to avoid division by zero.
+ 
+    Returns
     -------
-    sample                  : sample identifier
-    d_syn                   : distance to nearest synthetic neighbour
-    d_real                  : 2-NN baseline distance in HO set
-    ratio_dsyn_dreal        : d_syn / d_real  (< 1 => risk)
-    margin_dreal_minus_dsyn : d_real - d_syn  (> 0 => risk)
-    s_ratio                 : clamp(1 - ratio, 0, 1)  — per-sample proximity score
-    ap_flag                 : 1 if d_syn < d_real (adversarial-proximity candidate)
-    rank_s_ratio            : rank by s_ratio descending (1 = most risky)
-    rank_margin             : rank by margin descending
+    pd.DataFrame
+        One row per holdout sample, sorted descending by ``s_ratio``
+        then ``margin_dreal_minus_dsyn``. Columns:
+ 
+        - "sample": sample identifier.
+        - "d_syn": distance to nearest synthetic neighbour.
+        - "d_real": distance to nearest other holdout neighbour
+          (2-NN baseline).
+        - "ratio_dsyn_dreal": ``d_syn / d_real``. Values below 1
+          indicate the synthetic cohort is closer than the real baseline
+          (risk signal).
+        - "margin_dreal_minus_dsyn": ``d_real - d_syn``. Positive
+          values indicate the synthetic cohort is closer (risk signal);
+          larger margins indicate stronger identifiability.
+        - "s_ratio" per-sample proximity score
+          ``clamp(1 - ratio, 0, 1)``. Values near 1 indicate high
+          proximity risk for this individual.
+        - "ap_flag": 1 if ``d_syn < d_real`` (adversarial-proximity
+          candidate), else 0.
+        - "rank_s_ratio": rank by ``s_ratio`` descending
+          (1 = most at risk).
+        - "rank_margin": rank by ``margin_dreal_minus_dsyn``
+          descending (1 = largest margin).
     """
     d_syn = np.asarray(d_syn, float)
     d_real = np.asarray(d_real, float)
@@ -55,19 +82,32 @@ def per_sample_pli_table(d_syn: np.ndarray, d_real: np.ndarray, sample_names: Op
     ).reset_index(drop=True)
 
 
-def bootstrap_pli_consistency(d_syn: np.ndarray, d_real: np.ndarray, q: float = 0.01, boot: int = 200, seed: int = 123) -> pd.DataFrame:
-    """
-    Bootstrap over HO samples to assess PLI stability.
+def bootstrap_pli_consistency(d_syn: np.ndarray, d_real: np.ndarray, q: float = 0.01, boot: int = 100, random_seed: int = 123) -> pd.DataFrame:
+    """Assess PLI sub-score stability by bootstrapping holdout sample indices.
 
-    Resamples indices B times and recomputes rho_q, r_p, A, r_A, PLI
-    without re-running PCA/NN.
-
+    Parameters
+    ----------
+    d_syn : np.ndarray
+        Per-sample distance to the nearest synthetic neighbour.
+    d_real : np.ndarray
+        Per-sample holdout 2-NN baseline distances.
+    q : float, default=0.01
+        Quantile level for the ``rho_q`` / ``r_p`` sub-score.
+    boot : int, default=100
+        Number of bootstrap resamples.
+    random_seed : int, default=123
+        Random seed.
+ 
     Returns
     -------
-    DataFrame with columns: rho_q, r_p, A, r_A, PLI  (one row per bootstrap draw).
-    Caller is responsible for summarising (e.g. .describe() or quantile CIs).
+    pd.DataFrame
+        One row per bootstrap resample, ``boot`` rows total. Columns:
+        ``rho_q``, ``r_p``, ``A``, ``r_A``, ``PLI`` -- the same five
+        scalar outputs as ``pli_metrics``. Summarise with
+        ``.describe()`` or ``.quantile([0.025, 0.975])`` to obtain
+        confidence intervals.
     """
-    rng   = np.random.default_rng(seed)
+    rng   = np.random.default_rng(random_seed)
     d_syn  = np.asarray(d_syn, float)
     d_real = np.asarray(d_real, float)
     n     = len(d_syn)
@@ -88,14 +128,34 @@ def bootstrap_pli_consistency(d_syn: np.ndarray, d_real: np.ndarray, q: float = 
 
 
 def scan_pli_stability(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, *, n_components_grid: Iterable[int] = (5, 10, 20), q_grid: Iterable[float] = (0.005, 0.01, 0.02), seeds: Iterable[int] = (123, 124, 125, 126, 127), randomized_pca: bool = True) -> pd.DataFrame:
-    """
-    Recompute full PLI across a grid of hyperparameters and seeds.
-
-    Useful for assessing sensitivity to PCA dimensionality and quantile threshold.
-
+    """Recompute the full PLI pipeline across a grid of hyperparameters and seeds.
+ 
+    Parameters
+    ----------
+    G_tr : np.ndarray
+        Training genotype matrix.
+    G_ho : np.ndarray
+        Holdout genotype matrix,
+    G_syn : np.ndarray
+        Synthetic genotype matrix.
+    n_components_grid : iterable int, default=(5, 10, 20)
+        PCA component counts to sweep over.
+    q_grid : iterable of float, default=(0.005, 0.01, 0.02)
+        Quantile levels for the ``r_p`` sub-score to sweep over.
+    seeds : iterable of int, default=(123, 124, 125, 126, 127)
+        Random seeds for PCA to sweep over. Multiple seeds reveal
+        variability from PCA's randomized SVD solver.
+    randomized_pca : bool, default=True
+        Whether to use the randomized SVD solver in PCA, forwarded to
+        ``compute_pli``.
+ 
     Returns
     -------
-    DataFrame with columns: n_components, q, seed, rho_q, r_p, A, r_A, PLI, kept_snps.
+    pd.DataFrame
+        One row per (``n_components``, ``q``, ``seed``) combination.
+        Columns: ``n_components``, ``q``, ``seed``, ``rho_q``, ``r_p``,
+        ``A``, ``r_A``, ``PLI``, ``kept_snps``.
+        Total rows: ``len(n_components_grid) * len(q_grid) * len(seeds)``.
     """
     rows = []
     for nc in n_components_grid:
@@ -104,7 +164,7 @@ def scan_pli_stability(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, *,
                 out = compute_pli(
                     G_tr, G_ho, G_syn,
                     n_components=nc,
-                    random_state=s,
+                    random_seed=s,
                     q=q,
                     randomized_pca=randomized_pca,
                 )
@@ -122,11 +182,36 @@ def scan_pli_stability(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, *,
     return pd.DataFrame(rows)
 
 def _resolve_df_and_order(df: Optional[pd.DataFrame], d_syn: Optional[np.ndarray], d_real: Optional[np.ndarray], sample_names: Optional[Sequence[str]], sort_by: str, top_k: Optional[int]) -> pd.DataFrame:
-    """
-    Internal helper: build or validate the sample table, apply sort and top-k.
+    """Build or validate the per-sample table, apply sort and optional top-k.
 
-    Accepts either a pre-built DataFrame (from per_sample_pli_table) or raw
-    d_syn / d_real arrays. Returns a sorted, optionally truncated DataFrame.
+    Parameters
+    ----------
+    df : pd.DataFrame, optional
+        Pre-built per-sample table. 
+    d_syn : np.ndarray, optional
+        Raw synthetic distance array.
+    d_real : np.ndarray, optional
+        Raw holdout baseline distance array. 
+    sample_names : sequence of str, optional
+        Sample identifiers; used only when building the table from raw
+        arrays.
+    sort_by : str
+        Sort key. One of:
+ 
+        - "margin": sort by ``d_real - d_syn`` descending
+          (largest margin first).
+        - "ratio": sort by ``d_syn / d_real`` ascending
+          (smallest ratio first).
+        - "rank": sort by ``rank_s_ratio`` ascending
+          (most at risk first).
+        - "index": preserve existing row order.
+    top_k : int, optional
+        If provided, truncate to the first ``top_k`` rows after sorting.
+ 
+    Returns
+    -------
+    pd.DataFrame
+        Sorted and optionally truncated per-sample table.
     """
     if df is None:
         if d_syn is None or d_real is None:
@@ -155,23 +240,40 @@ def _resolve_df_and_order(df: Optional[pd.DataFrame], d_syn: Optional[np.ndarray
 
 
 def plot_dsyn_dreal_per_sample(d_syn: Optional[np.ndarray] = None, d_real: Optional[np.ndarray] = None, *, df: Optional[pd.DataFrame] = None, sample_names: Optional[Sequence[str]] = None, sort_by: str = "margin", top_k: Optional[int] = None, ax: Optional[plt.Axes] = None, title: str = "PLI per-sample distances") -> Tuple[plt.Figure, plt.Axes, pd.DataFrame]:
-    """
-    Line plot of d_syn and d_real per HO sample.
+    """Plot per-holdout-sample ``d_syn`` and ``d_real`` as a paired line chart.
 
     Parameters
     ----------
-    d_syn, d_real : raw distance arrays  — supply these OR `df`, not both.
-    df            : pre-built per_sample_pli_table DataFrame (avoids recomputation).
-    sample_names  : used only when raw arrays are supplied.
-    sort_by       : "margin" (d_real−d_syn desc), "ratio" (d_syn/d_real asc),
-                    "rank" (rank_s_ratio asc), "index" (original order).
-    top_k         : restrict plot to the k most identifiable samples.
-    ax            : existing Axes to draw on; a new figure is created if None.
-    title         : axes title.
-
+    d_syn : np.ndarray, optional
+        Per-sample synthetic distance array. 
+    d_real : np.ndarray, optional
+        Per-sample holdout baseline distance array. 
+    df : pd.DataFrame, optional
+        Pre-built per-sample table from ``per_sample_pli_table``.
+    sample_names : sequence of str, optional
+        Sample identifiers; used only when building the table from raw
+        arrays.
+    sort_by : str, default="margin"
+        How to order samples on the x-axis. One of ``"margin"``,
+        ``"ratio"``, ``"rank"``, ``"index"`` (see
+        ``_resolve_df_and_order``).
+    top_k : int, optional
+        Restrict the plot to the ``top_k`` most identifiable samples
+        after sorting. Useful for large holdout cohorts.
+    ax : plt.Axes, optional
+        Existing axes to draw on. A new figure is created if ``None``.
+    title : str, default="PLI per-sample distances"
+        Axes title.
+ 
     Returns
     -------
-    fig, ax, df_plot  — figure, axes, and the (sorted/truncated) DataFrame used.
+    fig : plt.Figure
+        The figure containing the plot.
+    ax : plt.Axes
+        The axes containing the plot.
+    df_plot : pd.DataFrame
+        The sorted and optionally truncated per-sample DataFrame used
+        to produce the plot.
     """
     df_plot = _resolve_df_and_order(df, d_syn, d_real, sample_names, sort_by, top_k)
 
@@ -197,24 +299,37 @@ def plot_dsyn_dreal_per_sample(d_syn: Optional[np.ndarray] = None, d_real: Optio
 
 
 def plot_identifiability_scatter(d_syn: Optional[np.ndarray] = None, d_real: Optional[np.ndarray] = None, *, df: Optional[pd.DataFrame] = None, sample_names: Optional[Sequence[str]] = None, annotate_top_k: int = 0, ax: Optional[plt.Axes] = None, title: str = "PLI identifiability") -> Tuple[plt.Figure, plt.Axes, pd.DataFrame]:
-    """
-    Scatter plot of d_syn (y) vs d_real (x) with identity diagonal.
-
-    Points **below** the diagonal (d_syn < d_real) are identifiability candidates —
-    their nearest synthetic neighbour is closer than their HO baseline.
-
+    """Scatter plot of ``d_syn`` vs ``d_real`` with the identity diagonal.
+ 
     Parameters
     ----------
-    d_syn, d_real : raw distance arrays — supply these OR `df`, not both.
-    df            : pre-built per_sample_pli_table DataFrame (avoids recomputation).
-    sample_names  : used only when raw arrays are supplied.
-    annotate_top_k: annotate the k samples with the largest margin (d_real − d_syn).
-    ax            : existing Axes; a new figure is created if None.
-    title         : axes title prefix (fraction below diagonal is appended).
-
+    d_syn : np.ndarray, optional
+        Per-sample synthetic distance array. 
+    d_real : np.ndarray, optional
+        Per-sample holdout baseline distance array. 
+    df : pd.DataFrame, optional
+        Pre-built per-sample table from ``per_sample_pli_table``.
+    sample_names : sequence of str, optional
+        Sample identifiers; used only when building the table from raw
+        arrays.
+    annotate_top_k : int, default=0
+        If > 0, annotate the ``top_k`` samples with the smallest
+        ``rank_s_ratio`` (most at risk) with their sample identifier.
+    ax : plt.Axes, optional
+        Existing axes to draw on. 
+    title : str, default="PLI identifiability"
+        Axes title prefix. The fraction of samples below the diagonal
+        is appended automatically.
+ 
     Returns
     -------
-    fig, ax, df_ranked  — figure, axes, and the full DataFrame sorted by rank_s_ratio.
+    fig : plt.Figure
+        The figure containing the plot.
+    ax : plt.Axes
+        The axes containing the plot.
+    df_ranked : pd.DataFrame
+        The full per-sample DataFrame sorted by ``rank_s_ratio``
+        (most at risk first).
     """
     df_full = _resolve_df_and_order(df, d_syn, d_real, sample_names, "rank", None)
 
@@ -246,36 +361,59 @@ def plot_identifiability_scatter(d_syn: Optional[np.ndarray] = None, d_real: Opt
 
     return fig, ax, df_full
 
-def pli_diagnostics(G_tr: np.ndarray,G_ho: np.ndarray, G_syn: np.ndarray,*, ho_names: Optional[Sequence[str]] = None, n_components: int = 10, q: float = 0.01, random_state: int = 123, boot: int = 200) -> Dict[str, object]:
-    """
-    One-call PLI diagnostics.
-
-    Runs compute_pli once; all downstream tables and plots reuse the resulting
-    distance arrays — no redundant computation.
-
+def pli_diagnostics(G_tr: np.ndarray,G_ho: np.ndarray, G_syn: np.ndarray,*, ho_names: Optional[Sequence[str]] = None, n_components: int = 10, q: float = 0.01, random_seed: int = 123, boot: int = 200) -> Dict[str, object]:
+    """Run a full PLI diagnostic suite in a single call.
+ 
+    Parameters
+    ----------
+    G_tr : np.ndarray
+        Training genotype matrix.
+    G_ho : np.ndarray
+        Holdout genotype matrix.
+    G_syn : np.ndarray
+        Synthetic genotype matrix.
+    ho_names : sequence of str, optional
+        Identifiers for holdout samples. If ``None``, samples are
+        labelled ``"HO_0"``, ``"HO_1"``, etc.
+    n_components : int, default=10
+        Number of PCA components.
+    q : float, default=0.01
+        Quantile level for the ``r_p`` sub-score.
+    random_seed : int, default=123
+        Random seed.
+    boot : int, default=100
+        Number of bootstrap resamples for ``bootstrap_pli_consistency``.
+ 
     Returns
     -------
-    dict with keys:
-      pli         : raw compute_pli output dict
-      driver      : "ratio_tail" | "adv_proximity"
-      per_sample  : per_sample_pli_table DataFrame
-      boot        : bootstrap_pli_consistency DataFrame (raw draws)
-
-    Plotting
-    --------
-    Pass ``result["per_sample"]`` directly as the `df` argument to
-    plot_dsyn_dreal_per_sample and plot_identifiability_scatter to avoid
-    rebuilding the table.
+    dict
+        Dictionary with the following keys:
+ 
+        - "pli" (dict): the full output of ``compute_pli``,
+          including all sub-scores, distance arrays, and metadata.
+        - "driver" (str): which sub-score drove the final PLI
+          value -- ``"ratio_tail"`` when ``r_p >= r_A`` (the quantile
+          tail proximity signal dominated), or ``"adv_proximity"`` when
+          ``r_A > r_p`` (the adversarial proximity signal dominated).
+          Useful for deciding which diagnostic plot to prioritise.
+        - "per_sample" (pd.DataFrame): output of
+          ``per_sample_pli_table``, sorted by identifiability risk.
+          Pass directly as ``df`` to ``plot_dsyn_dreal_per_sample`` or
+          ``plot_identifiability_scatter``.
+        - "boot" (pd.DataFrame): output of
+          ``bootstrap_pli_consistency``, one row per bootstrap draw.
+          Summarise with ``.describe()`` or ``.quantile([0.025, 0.975])``
+          for confidence intervals on PLI sub-scores.
     """
     out = compute_pli(
         G_tr, G_ho, G_syn,
         n_components=n_components,
         q=q,
-        random_state=random_state,
+        random_seed=random_seed,
     )
 
     df_samples = per_sample_pli_table(out["d_syn"], out["d_real"], sample_names=ho_names)
-    df_boot    = bootstrap_pli_consistency(out["d_syn"], out["d_real"], q=q, boot = boot, seed=random_state)
+    df_boot    = bootstrap_pli_consistency(out["d_syn"], out["d_real"], q=q, boot = boot, random_seed=random_seed)
 
     return {
         "pli":        out,
@@ -283,3 +421,11 @@ def pli_diagnostics(G_tr: np.ndarray,G_ho: np.ndarray, G_syn: np.ndarray,*, ho_n
         "per_sample": df_samples,
         "boot":       df_boot,
     }
+
+__all__ = ["per_sample_pli_table",
+           "bootstrap_pli_consistency",
+           "scan_pli_stability",
+           "_resolve_df_and_order",
+           "plot_dsyn_dreal_per_sample",
+           "plot_identifiability_scatter",
+           "pli_diagnostics",]

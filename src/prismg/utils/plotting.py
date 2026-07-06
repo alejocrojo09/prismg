@@ -8,6 +8,27 @@ from matplotlib.colors import Normalize
 from matplotlib.cm import get_cmap
 
 def plot_boot_barplot(boot_G_raw: Dict[str, Sequence[float]], tblG: pd.DataFrame, title: str = "Bootstrap PRISM-G") -> Tuple[plt.Figure, plt.Axes]:
+    """Bar chart of bootstrap PRISM-G means with ± 1 SD error bars.
+
+    Parameters
+    ----------
+    boot_G_raw : dict of str -> sequence of float
+        Per-candidate bootstrap PRISM-G score arrays, as returned in the
+        ``boot_G`` key of ``bootstrap_analysis``.
+    tblG : pd.DataFrame
+        Summary statistics table from ``bootstrap_analysis``
+        (``tbl_stats_G``).
+    title : str, default="Bootstrap PRISM-G"
+        Axes title.
+ 
+    Returns
+    -------
+    fig : plt.Figure
+        The figure containing the plot.
+    ax : plt.Axes
+        The axes containing the plot.
+ 
+    """
     order = tblG.sort_values("mean_G", ascending=True)["name"].tolist()
     data  = [np.asarray(boot_G_raw[n], dtype=float) for n in order]
 
@@ -40,6 +61,23 @@ def plot_boot_barplot(boot_G_raw: Dict[str, Sequence[float]], tblG: pd.DataFrame
     return fig, ax
 
 def plot_prismg_summary(df, title="PRISM-G (0 = safer, 100 = riskier)"):
+    """Bar chart of point-estimate PRISM-G scores for candidate datasets.
+ 
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Summary DataFrame containing at least columns ``"role"``,
+        ``"name"``, and ``"PRISM_G"``. 
+    title : str, default="PRISM-G (0 = safer, 100 = riskier)"
+        Axes title.
+ 
+    Returns
+    -------
+    fig : plt.Figure
+        The figure containing the plot.
+    ax : plt.Axes
+        The axes containing the plot.
+    """
     df_cand = df[df["role"] == "candidate"].sort_values("PRISM_G")
 
     labels = df_cand["name"].tolist()
@@ -67,3 +105,6 @@ def plot_prismg_summary(df, title="PRISM-G (0 = safer, 100 = riskier)"):
 
     fig.tight_layout()
     return fig, ax
+
+__all__ = ["plot_boot_barplot",
+           "plot_prismg_summary",]
