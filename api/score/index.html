@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://prismg.github.io/api/score/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Score - PRISM-G</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Score";
+        var mkdocs_page_input_path = "api\\score.md";
+        var mkdocs_page_url = "/api/score/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> PRISM-G
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../usage/">Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../components/">Estimating PRISM-G Components</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../score/">Calculating the Privacy Risk Score</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ancestry/">Generating a Privacy-Utility Trade-off Curve</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../diagnostics/">Diagnostics Using Proximity Leakage Metrics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../anchors/">Generating the Safe and Leaky Anchors</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../io/">IO</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../metrics/">Metrics</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Score</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#prismg.score">score</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.score.calibrate_to_prism">calibrate_to_prism</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.score.choose_targets_from_anchors">choose_targets_from_anchors</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.score.clamp01">clamp01</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.score.fit_weights_anchor">fit_weights_anchor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.score.r_raw">r_raw</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../bootstrap/">Bootstrap</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../utils/">Utils</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">PRISM-G</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API</li>
+      <li class="breadcrumb-item active">Score</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/alejocrojo09/prismg/edit/master/docs/api/score.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="score">Score</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="prismg.score" class="doc doc-heading">
+            <code>score</code>
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.score.calibrate_to_prism" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">calibrate_to_prism</span><span class="p">(</span><span class="n">R_raw</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Rescale a raw risk value onto a 0-100 PRISM score using [alpha, beta] as anchors.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>R_raw</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The raw combined risk score to calibrate.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>alpha</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw score corresponding to the safe anchor; maps to 0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>beta</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw score corresponding to leaky anchor; maps to 100.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eps</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1e-12</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Minimum allowed denominator, used to avoid division by zero.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="float">float</span></code>
+              –
+              <div class="doc-md-description">
+                <p>The calibrated PRISM score, mapped to [0, 100].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\score.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calibrate_to_prism</span><span class="p">(</span><span class="n">R_raw</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rescale a raw risk value onto a 0-100 PRISM score using [alpha, beta] as anchors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    R_raw : float</span>
+<span class="sd">        The raw combined risk score to calibrate.</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Raw score corresponding to the safe anchor; maps to 0.</span>
+<span class="sd">    beta : float</span>
+<span class="sd">        Raw score corresponding to leaky anchor; maps to 100.</span>
+<span class="sd">    eps : float, default=1e-12</span>
+<span class="sd">        Minimum allowed denominator, used to avoid division by zero.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The calibrated PRISM score, mapped to [0, 100].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">beta</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">clamp01</span><span class="p">((</span><span class="n">R_raw</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">/</span> <span class="n">denom</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.score.choose_targets_from_anchors" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">choose_targets_from_anchors</span><span class="p">(</span><span class="n">r_safe_list</span><span class="p">,</span> <span class="n">r_leak_list</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Derive the calibration targets from collections of anchor risk vectors.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>r_safe_list</code></b>
+                  (<code>iterable of sequence of float or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>A collection of per-metric risk vectors, one per "safe" anchor
+sample (e.g. one entry per safe-cohort dataset evaluated).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>r_leak_list</code></b>
+                  (<code>iterable of sequence of float or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>A collection of per-metric risk vectors, one per "leaky" anchor
+sample.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>eps</code></b>(                  <code><span title="float">float</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Target raw risk score for safe anchors, clipped to [0.02, 0.10].</p>
+              </div>
+            </li>
+            <li>
+<b><code>lam</code></b>(                  <code><span title="float">float</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Target raw risk score for leaky anchors, clipped to [0.75, 0.90].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\score.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_targets_from_anchors</span><span class="p">(</span><span class="n">r_safe_list</span><span class="p">,</span> <span class="n">r_leak_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive the calibration targets from collections of anchor risk vectors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r_safe_list : iterable of sequence of float or None</span>
+<span class="sd">        A collection of per-metric risk vectors, one per &quot;safe&quot; anchor</span>
+<span class="sd">        sample (e.g. one entry per safe-cohort dataset evaluated).</span>
+<span class="sd">    r_leak_list : iterable of sequence of float or None</span>
+<span class="sd">        A collection of per-metric risk vectors, one per &quot;leaky&quot; anchor</span>
+<span class="sd">        sample.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    eps : float</span>
+<span class="sd">        Target raw risk score for safe anchors, clipped to [0.02, 0.10].</span>
+<span class="sd">    lam : float</span>
+<span class="sd">        Target raw risk score for leaky anchors, clipped to [0.75, 0.90].</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">R</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+        <span class="c1"># With w0 = 0, _or_like_raw_vec returns 0.0 by design (zero-sum weights)</span>
+        <span class="k">return</span> <span class="n">r_raw</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">w0</span><span class="p">)</span>
+
+    <span class="n">R_safe_eq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">([</span><span class="n">R</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r_safe_list</span><span class="p">]))</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_safe_list</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="n">R_leak_eq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">([</span><span class="n">R</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r_leak_list</span><span class="p">]))</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_leak_list</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">R_safe_eq</span> <span class="o">+</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">))</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">R_leak_eq</span> <span class="o">+</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">eps</span><span class="p">,</span> <span class="n">lam</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.score.clamp01" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">clamp01</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Clamp a single numeric value into the closed interval [0, 1].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Value to clamp.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="float">float</span></code>
+              –
+              <div class="doc-md-description">
+                <p><code>x</code> clamped to the range [0.0, 1.0]. Values below 0 become 0.0,
+values above 1 become 1.0, and values already in range are
+returned unchanged.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\score.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clamp01</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clamp a single numeric value into the closed interval [0, 1].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : float</span>
+<span class="sd">        Value to clamp. </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        ``x`` clamped to the range [0.0, 1.0]. Values below 0 become 0.0,</span>
+<span class="sd">        values above 1 become 1.0, and values already in range are</span>
+<span class="sd">        returned unchanged.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.score.fit_weights_anchor" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fit_weights_anchor</span><span class="p">(</span><span class="n">r_safe</span><span class="p">,</span> <span class="n">r_leak</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Ridge (L2) regularization using reference anchors.</p>
+<p>Searches over 3-component weight vector on a regular grid, and picks the
+weights that minimize the loss. </p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>r_safe</code></b>
+                  (<code>sequence of float or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>Per-metric risk scores for the safe anchor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>r_leak</code></b>
+                  (<code>sequence of float or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>Per-metric risk scores for the leaky anchor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eps</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.05</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Target combined raw risk score for the safe anchor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lam</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.8</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Target combined raw risk score for the leaky anchor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gamma</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1e-3</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Strength of the ridge (L2) regularization term.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>w0</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Initial weight seed. If none, w0 = [0,0,0]</p>
+              </div>
+            </li>
+            <li>
+              <b><code>step</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.01</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Grid resolution for <code>w1</code>/<code>w2</code> in [0, 1]; <code>w3</code> is derived as
+<code>1 - w1 - w2</code> and any grid point with <code>w3 &lt; 0</code> is skipped.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+              –
+              <div class="doc-md-description">
+                <p>The 3-element weight vector <code>[w1, w2, w3]</code> (summing to 1, all
+non-negative) achieving the lowest loss found on the grid.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\score.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fit_weights_anchor</span><span class="p">(</span><span class="n">r_safe</span><span class="p">,</span> <span class="n">r_leak</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">w0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ridge (L2) regularization using reference anchors.</span>
+
+<span class="sd">    Searches over 3-component weight vector on a regular grid, and picks the</span>
+<span class="sd">    weights that minimize the loss. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r_safe : sequence of float or None</span>
+<span class="sd">        Per-metric risk scores for the safe anchor.</span>
+<span class="sd">    r_leak : sequence of float or None</span>
+<span class="sd">        Per-metric risk scores for the leaky anchor.</span>
+<span class="sd">    eps : float, default=0.05</span>
+<span class="sd">        Target combined raw risk score for the safe anchor.</span>
+<span class="sd">    lam : float, default=0.8</span>
+<span class="sd">        Target combined raw risk score for the leaky anchor.</span>
+<span class="sd">    gamma : float, default=1e-3</span>
+<span class="sd">        Strength of the ridge (L2) regularization term.</span>
+<span class="sd">    w0: sequence of float or None. </span>
+<span class="sd">        Initial weight seed. If none, w0 = [0,0,0]</span>
+<span class="sd">    step : float, default=0.01</span>
+<span class="sd">        Grid resolution for ``w1``/``w2`` in [0, 1]; ``w3`` is derived as</span>
+<span class="sd">        ``1 - w1 - w2`` and any grid point with ``w3 &lt; 0`` is skipped.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        The 3-element weight vector ``[w1, w2, w3]`` (summing to 1, all</span>
+<span class="sd">        non-negative) achieving the lowest loss found on the grid. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">w0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">w0</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">best_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">best_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">])</span> <span class="c1"># Initial best, equal weights</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w1</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">w2</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
+            <span class="n">w3</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">w2</span>
+            <span class="k">if</span> <span class="n">w3</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="n">w3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">r_safe_val</span> <span class="o">=</span> <span class="n">r_raw</span><span class="p">(</span><span class="n">r_safe</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">r_leak_val</span> <span class="o">=</span> <span class="n">r_raw</span><span class="p">(</span><span class="n">r_leak</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_safe_val</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">r_leak_val</span> <span class="o">-</span> <span class="n">lam</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">w</span> <span class="o">-</span> <span class="n">w0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">loss</span> <span class="o">&lt;</span> <span class="n">best_loss</span><span class="p">:</span>
+                <span class="n">best_loss</span> <span class="o">=</span> <span class="n">loss</span>
+                <span class="n">best_w</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="k">return</span> <span class="n">best_w</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.score.r_raw" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">r_raw</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">w_vec</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Combine per-metric risk scores into a single raw risk value via noisy-OR.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>r_vec</code></b>
+                  (<code><span title="list">list</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Component risk scores</p>
+              </div>
+            </li>
+            <li>
+              <b><code>w_vec</code></b>
+                  (<code><span title="list">list</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Per-metric weights, same length as <code>r_vec</code>. If omitted, all
+metrics are weighted equally.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="float">float</span></code>
+              –
+              <div class="doc-md-description">
+                <p>The combined raw risk score. </p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If <code>w_vec</code> is provided and its length does not match <code>r_vec</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\score.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">r_raw</span><span class="p">(</span><span class="n">r_vec</span><span class="p">,</span> <span class="n">w_vec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine per-metric risk scores into a single raw risk value via noisy-OR.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r_vec : list</span>
+<span class="sd">        Component risk scores</span>
+<span class="sd">    w_vec : list</span>
+<span class="sd">        Per-metric weights, same length as ``r_vec``. If omitted, all</span>
+<span class="sd">        metrics are weighted equally. </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The combined raw risk score. </span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``w_vec`` is provided and its length does not match ``r_vec``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r_vec</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">keep</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w_vec</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;w_vec must have the same length as r_vec&quot;</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Explicitly allow the zero-weight edge case (result = 0.0)</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">s</span>
+
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../metrics/" class="btn btn-neutral float-left" title="Metrics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../bootstrap/" class="btn btn-neutral float-right" title="Bootstrap">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/alejocrojo09/prismg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../metrics/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../bootstrap/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

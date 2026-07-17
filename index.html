@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" /><link rel="canonical" href="https://prismg.github.io/" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>PRISM-G</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Overview";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = "/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> PRISM-G
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="usage/">Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="components/">Estimating PRISM-G Components</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="score/">Calculating the Privacy Risk Score</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="ancestry/">Generating a Privacy-Utility Trade-off Curve</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="diagnostics/">Diagnostics Using Proximity Leakage Metrics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="anchors/">Generating the Safe and Leaky Anchors</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="api/io/">IO</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/metrics/">Metrics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/score/">Score</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/bootstrap/">Bootstrap</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/utils/">Utils</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">PRISM-G</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Overview</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/alejocrojo09/prismg/edit/master/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="prism-g-privacy-risk-integrated-score-for-multi-representation-genomes">PRISM-G: Privacy Risk Integrated Score For Multi-Representation Genomes</h1>
+<p align="center">
+  <img src="img/Logo2.png" alt="PRISM-G overview" width="800"/>
+</p>
+
+<p><strong>PRISM-G</strong> is an interpretable framework for evaluating the privacy risk of synthetic genomic data (artificial genotype datasets). It quantifies privacy exposure by comparing real and synthetic genotypes across three complementary components:</p>
+<ul>
+<li><strong>Proximity Leakage (PLI)</strong>: Measures whether synthetic samples are unusually close to real individuals in genetic coordinate space, indicating potential identity leakage.</li>
+<li><strong>Kinship Replay (KRI)</strong>: Detects whether patterns of genetic relatedness present in the original data, such as kinship or haplotype sharing, have been unintentionally reproduced.</li>
+<li><strong>Trait-Linked Leakage (TLI)</strong>: Evaluates whether rare variant signals are preserved and whether they can distinguish individuals whose genomes were used to generate the synthetic data.</li>
+</ul>
+<p>These components are combined into a calibrated <strong>PRISM-G score (0–100)</strong> that summarizes the overall privacy risk while preserving interpretability through its individual component scores.</p>
+<p>PRISM-G is a model-agnostic framework that can be used to evaluate the privacy exposure of different classes of synthetic genome generators. Furthermore, when combined with a utility metric for a specific downstream task, it enables the construction of a privacy–utility Pareto frontier, facilitating systematic comparison of generative models and their trade-offs between privacy protection and analytical utility.</p>
+<hr />
+<h2 id="citation">Citation</h2>
+<p>If you use PRISM-G in your work, you can cite:</p>
+<blockquote>
+<p>Alejandro Correa Rojo, Yves Moreau, Gökhan Ertaylan, PRISM-G: an interpretable privacy scoring framework for assessing risk in synthetic human genome data, <em>Bioinformatics</em>, Volume XX, Issue XX, August XX, Pages XX-XX, https://doi.org/10.1093/bioinformatics/btag377.  </p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="installation/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/alejocrojo09/prismg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+      <span><a href="installation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-07-17 10:11:14.893542+00:00
+-->

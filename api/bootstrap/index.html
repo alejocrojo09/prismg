@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://prismg.github.io/api/bootstrap/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Bootstrap - PRISM-G</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Bootstrap";
+        var mkdocs_page_input_path = "api\\bootstrap.md";
+        var mkdocs_page_url = "/api/bootstrap/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> PRISM-G
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../usage/">Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../components/">Estimating PRISM-G Components</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../score/">Calculating the Privacy Risk Score</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ancestry/">Generating a Privacy-Utility Trade-off Curve</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../diagnostics/">Diagnostics Using Proximity Leakage Metrics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../anchors/">Generating the Safe and Leaky Anchors</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../io/">IO</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../metrics/">Metrics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../score/">Score</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Bootstrap</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#prismg.bootstrap">bootstrap</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.bootstrap.bootstrap_analysis">bootstrap_analysis</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.bootstrap.grid_search">grid_search</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.bootstrap.kendall_tau_a">kendall_tau_a</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.bootstrap.p_fmt_pow10">p_fmt_pow10</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#prismg.bootstrap.rank_from_scores">rank_from_scores</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../utils/">Utils</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">PRISM-G</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API</li>
+      <li class="breadcrumb-item active">Bootstrap</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/alejocrojo09/prismg/edit/master/docs/api/bootstrap.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="bootstrap">Bootstrap</h1>
+<hr />
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="prismg.bootstrap" class="doc doc-heading">
+            <code>bootstrap</code>
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.bootstrap.bootstrap_analysis" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">bootstrap_analysis</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">refit_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Assess PRISM-G score stability and pairwise significance via bootstrapping.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Input table with columns <code>name</code>, <code>role</code>, <code>pli</code>, <code>kri</code>,
+<code>tli</code>. <code>role</code> must be one of <code>"safe anchor"</code>,
+<code>"leaky anchor"</code>, or <code>"candidate"</code>.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>n_boot</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>100</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Number of bootstrap replicates.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.01</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Standard deviation of the Gaussian jitter applied to each anchor
+metric score on every replicate.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eps</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.02</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Target raw risk score for the safe anchor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lam</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.80</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Target raw risk score for the leaky anchor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gamma</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1e-3</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Ridge regularization strength.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>w0</code></b>
+                  (<code>sequence of float</code>, default:
+                      <code>(0, 0, 0)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Ridge regularization anchor (the point <code>w</code> is penalized toward).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>refit_weights</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If <code>False</code> (default), weights are fitted once on the un-jittered
+anchor scores and reused for all <code>n_boot</code> replicates. This isolates
+score variability, holding the weight vector
+fixed. If <code>True</code>, weights are refitted on every replicate, so both weight uncertainty and score
+uncertainty are propagated; the returned <code>weights_out</code> is then a
+dict with keys <code>"mean"</code>, <code>"sd"</code>, and <code>"n"</code> summarizing the
+distribution of fitted weights across replicates.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>step</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.01</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Grid resolution.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>random_seed</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>123</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Random seed.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>weights_out</code></b>(                  <code><span title="numpy.ndarray">ndarray</span> or <span title="dict">dict</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>If <code>refit_weights=False</code>: the single fixed weight vector
+<code>[w_PLI, w_KRI, w_TLI]</code> used across all replicates.
+If <code>refit_weights=True</code>: a dict with keys "mean",
+"sd", and "n", summarizing the per-replicate
+fitted weights.</p>
+              </div>
+            </li>
+            <li>
+<b><code>tbl_stats_R</code></b>(                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Per-candidate summary of raw <code>R</code> score distributions across
+bootstrap replicates, sorted descending by <code>mean_R</code>. Columns:
+<code>name</code>, <code>mean_R</code>, <code>sd_R</code>, <code>ci95_R_lo</code>, <code>ci95_R_hi</code>.</p>
+              </div>
+            </li>
+            <li>
+<b><code>tbl_stats_G</code></b>(                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Per-candidate summary of calibrated PRISM-G score distributions,
+sorted descending by <code>mean_G</code>. Columns: <code>name</code>, <code>mean_G</code>,
+<code>sd_G</code>, <code>ci95_G_lo</code>, <code>ci95_G_hi</code>.</p>
+              </div>
+            </li>
+            <li>
+<b><code>tbl_pvals</code></b>(                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>All pairwise comparisons of PRISM-G scores (A vs B for every pair
+of candidates), sorted ascending by <code>p_two_sided</code>. Columns:
+<code>A_minus_B</code>, <code>mean_diff</code>, <code>ci95_diff_lo</code>, <code>ci95_diff_hi</code>,
+<code>p_two_sided</code>, <code>p_fmt</code>.</p>
+              </div>
+            </li>
+            <li>
+<b><code>rank_strings</code></b>(                  <code>list of str</code>
+)              –
+              <div class="doc-md-description">
+                <p>The full ranking string for each bootstrap replicate, formatted as
+"name_A &gt; name_B &gt; ..." from highest to lowest PRISM-G score.</p>
+              </div>
+            </li>
+            <li>
+<b><code>kendall_summary</code></b>(                  <code><span title="dict">dict</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Summary of Kendall tau-a ranking stability. Keys:</p>
+<ul>
+<li>"baseline": the ranking string of the first replicate,
+  used as the reference ordering for all tau computations.</li>
+<li>"mean_tau", "sd_tau": mean and SD of tau across
+  all n_boot replicates relative to the baseline.</li>
+<li>"tau_ci95": <code>[lo, hi]</code> 2.5/97.5 percentile interval.</li>
+<li>"perm_null_mean", "perm_null_sd": mean and SD of tau
+  under a permutation null.</li>
+<li>"p_value_two_sided": two-sided permutation p-value
+  comparing <code>mean_tau</code> against the null distribution.</li>
+<li>"p_fmt": formatted p-value string from <code>p_fmt_pow10</code>.</li>
+</ul>
+              </div>
+            </li>
+            <li>
+<b><code>boot_G</code></b>(                  <code>dict of str -&gt; list of float</code>
+)              –
+              <div class="doc-md-description">
+                <p>Raw per-replicate PRISM-G score arrays keyed by candidate name.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\bootstrap.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bootstrap_analysis</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.80</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">refit_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">123</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assess PRISM-G score stability and pairwise significance via bootstrapping.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">        Input table with columns ``name``, ``role``, ``pli``, ``kri``,</span>
+<span class="sd">        ``tli``. ``role`` must be one of ``&quot;safe anchor&quot;``,</span>
+<span class="sd">        ``&quot;leaky anchor&quot;``, or ``&quot;candidate&quot;``.</span>
+<span class="sd">    n_boot : int, default=100</span>
+<span class="sd">        Number of bootstrap replicates.</span>
+<span class="sd">    sigma : float, default=0.01</span>
+<span class="sd">        Standard deviation of the Gaussian jitter applied to each anchor</span>
+<span class="sd">        metric score on every replicate.</span>
+<span class="sd">    eps : float, default=0.02</span>
+<span class="sd">        Target raw risk score for the safe anchor.</span>
+<span class="sd">    lam : float, default=0.80</span>
+<span class="sd">        Target raw risk score for the leaky anchor.</span>
+<span class="sd">    gamma : float, default=1e-3</span>
+<span class="sd">        Ridge regularization strength.</span>
+<span class="sd">    w0 : sequence of float, default=(0, 0, 0)</span>
+<span class="sd">        Ridge regularization anchor (the point ``w`` is penalized toward).</span>
+<span class="sd">    refit_weights : bool, default=False</span>
+<span class="sd">        If ``False`` (default), weights are fitted once on the un-jittered</span>
+<span class="sd">        anchor scores and reused for all ``n_boot`` replicates. This isolates</span>
+<span class="sd">        score variability, holding the weight vector</span>
+<span class="sd">        fixed. If ``True``, weights are refitted on every replicate, so both weight uncertainty and score</span>
+<span class="sd">        uncertainty are propagated; the returned ``weights_out`` is then a</span>
+<span class="sd">        dict with keys ``&quot;mean&quot;``, ``&quot;sd&quot;``, and ``&quot;n&quot;`` summarizing the</span>
+<span class="sd">        distribution of fitted weights across replicates.</span>
+<span class="sd">    step : float, default=0.01</span>
+<span class="sd">        Grid resolution.</span>
+<span class="sd">    random_seed : int, default=123</span>
+<span class="sd">        Random seed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    weights_out : np.ndarray or dict</span>
+<span class="sd">        If ``refit_weights=False``: the single fixed weight vector</span>
+<span class="sd">        ``[w_PLI, w_KRI, w_TLI]`` used across all replicates.</span>
+<span class="sd">        If ``refit_weights=True``: a dict with keys &quot;mean&quot;,</span>
+<span class="sd">        &quot;sd&quot;, and &quot;n&quot;, summarizing the per-replicate</span>
+<span class="sd">        fitted weights.</span>
+<span class="sd">    tbl_stats_R : pd.DataFrame</span>
+<span class="sd">        Per-candidate summary of raw ``R`` score distributions across</span>
+<span class="sd">        bootstrap replicates, sorted descending by ``mean_R``. Columns:</span>
+<span class="sd">        ``name``, ``mean_R``, ``sd_R``, ``ci95_R_lo``, ``ci95_R_hi``.</span>
+<span class="sd">    tbl_stats_G : pd.DataFrame</span>
+<span class="sd">        Per-candidate summary of calibrated PRISM-G score distributions,</span>
+<span class="sd">        sorted descending by ``mean_G``. Columns: ``name``, ``mean_G``,</span>
+<span class="sd">        ``sd_G``, ``ci95_G_lo``, ``ci95_G_hi``.</span>
+<span class="sd">    tbl_pvals : pd.DataFrame</span>
+<span class="sd">        All pairwise comparisons of PRISM-G scores (A vs B for every pair</span>
+<span class="sd">        of candidates), sorted ascending by ``p_two_sided``. Columns:</span>
+<span class="sd">        ``A_minus_B``, ``mean_diff``, ``ci95_diff_lo``, ``ci95_diff_hi``,</span>
+<span class="sd">        ``p_two_sided``, ``p_fmt``.</span>
+<span class="sd">    rank_strings : list of str</span>
+<span class="sd">        The full ranking string for each bootstrap replicate, formatted as</span>
+<span class="sd">        &quot;name_A &gt; name_B &gt; ...&quot; from highest to lowest PRISM-G score.</span>
+<span class="sd">    kendall_summary : dict</span>
+<span class="sd">        Summary of Kendall tau-a ranking stability. Keys:</span>
+
+<span class="sd">        - &quot;baseline&quot;: the ranking string of the first replicate,</span>
+<span class="sd">          used as the reference ordering for all tau computations.</span>
+<span class="sd">        - &quot;mean_tau&quot;, &quot;sd_tau&quot;: mean and SD of tau across</span>
+<span class="sd">          all n_boot replicates relative to the baseline.</span>
+<span class="sd">        - &quot;tau_ci95&quot;: ``[lo, hi]`` 2.5/97.5 percentile interval.</span>
+<span class="sd">        - &quot;perm_null_mean&quot;, &quot;perm_null_sd&quot;: mean and SD of tau</span>
+<span class="sd">          under a permutation null.</span>
+<span class="sd">        - &quot;p_value_two_sided&quot;: two-sided permutation p-value</span>
+<span class="sd">          comparing ``mean_tau`` against the null distribution.</span>
+<span class="sd">        - &quot;p_fmt&quot;: formatted p-value string from ``p_fmt_pow10``.</span>
+<span class="sd">    boot_G : dict of str -&gt; list of float</span>
+<span class="sd">        Raw per-replicate PRISM-G score arrays keyed by candidate name.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">idx_safe</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;safe anchor&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">idx_leak</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;leaky anchor&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cand_names</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;candidate&quot;</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">r_safe0</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_safe</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;pli&quot;</span><span class="p">,</span><span class="s2">&quot;kri&quot;</span><span class="p">,</span><span class="s2">&quot;tli&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">r_leak0</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_leak</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;pli&quot;</span><span class="p">,</span><span class="s2">&quot;kri&quot;</span><span class="p">,</span><span class="s2">&quot;tli&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">w0</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">weights_fixed</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">refit_weights</span><span class="p">:</span>
+        <span class="n">weights_fixed</span> <span class="o">=</span> <span class="n">fit_weights_anchor</span><span class="p">(</span><span class="n">r_safe0</span><span class="p">,</span> <span class="n">r_leak0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="n">w0</span><span class="p">)</span>
+
+    <span class="n">boot_R</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cand_names</span><span class="p">}</span>
+    <span class="n">boot_G</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cand_names</span><span class="p">}</span>
+    <span class="n">rank_strings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">w_history</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">jitter</span><span class="p">(</span><span class="n">v</span><span class="p">):</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">r_safe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">jitter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r_safe0</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">r_leak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">jitter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r_leak0</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">fit_weights_anchor</span><span class="p">(</span><span class="n">r_safe</span><span class="p">,</span> <span class="n">r_leak</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="n">w0</span><span class="p">)</span> <span class="k">if</span> <span class="n">refit_weights</span> <span class="k">else</span> <span class="n">weights_fixed</span>
+        <span class="k">if</span> <span class="n">refit_weights</span><span class="p">:</span> <span class="n">w_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">r_raw</span><span class="p">(</span><span class="n">r_safe</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span> <span class="n">beta</span> <span class="o">=</span> <span class="n">r_raw</span><span class="p">(</span><span class="n">r_leak</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+
+        <span class="n">scores_G</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;candidate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">row</span><span class="p">[[</span><span class="s2">&quot;pli&quot;</span><span class="p">,</span><span class="s2">&quot;kri&quot;</span><span class="p">,</span><span class="s2">&quot;tli&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">Rb</span> <span class="o">=</span> <span class="n">r_raw</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">Gb</span> <span class="o">=</span> <span class="n">calibrate_to_prism</span><span class="p">(</span><span class="n">Rb</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+            <span class="n">boot_R</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rb</span><span class="p">)</span>
+            <span class="n">boot_G</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Gb</span><span class="p">)</span>
+            <span class="n">scores_G</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Gb</span><span class="p">)</span>
+        <span class="n">rank_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &gt; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rank_from_scores</span><span class="p">(</span><span class="n">scores_G</span><span class="p">,</span> <span class="n">cand_names</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ci95</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">97.5</span><span class="p">]);</span> <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span>
+
+    <span class="n">rowsR</span><span class="p">,</span> <span class="n">rowsG</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">cand_names</span><span class="p">:</span>
+        <span class="n">arrR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_R</span><span class="p">[</span><span class="n">name</span><span class="p">]);</span> <span class="n">arrG</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_G</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="n">rowsR</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;mean_R&quot;</span><span class="p">:</span> <span class="n">arrR</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">&quot;sd_R&quot;</span><span class="p">:</span> <span class="n">arrR</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                      <span class="s2">&quot;ci95_R_lo&quot;</span><span class="p">:</span> <span class="n">ci95</span><span class="p">(</span><span class="n">arrR</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;ci95_R_hi&quot;</span><span class="p">:</span> <span class="n">ci95</span><span class="p">(</span><span class="n">arrR</span><span class="p">)[</span><span class="mi">1</span><span class="p">]})</span>
+        <span class="n">rowsG</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;mean_G&quot;</span><span class="p">:</span> <span class="n">arrG</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">&quot;sd_G&quot;</span><span class="p">:</span> <span class="n">arrG</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                      <span class="s2">&quot;ci95_G_lo&quot;</span><span class="p">:</span> <span class="n">ci95</span><span class="p">(</span><span class="n">arrG</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;ci95_G_hi&quot;</span><span class="p">:</span> <span class="n">ci95</span><span class="p">(</span><span class="n">arrG</span><span class="p">)[</span><span class="mi">1</span><span class="p">]})</span>
+    <span class="n">tbl_stats_R</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rowsR</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;mean_R&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tbl_stats_G</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rowsG</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;mean_G&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># pairwise PRISM-G differences, two-sided p-values</span>
+    <span class="n">rowsP</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">A_name</span><span class="p">,</span> <span class="n">B_name</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">cand_names</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_G</span><span class="p">[</span><span class="n">A_name</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_G</span><span class="p">[</span><span class="n">B_name</span><span class="p">])</span>
+        <span class="n">p_two</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">d</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">))))</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">])</span>
+        <span class="n">rowsP</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;A_minus_B&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">A_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">B_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mean_diff&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+            <span class="s2">&quot;ci95_diff_lo&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span>
+            <span class="s2">&quot;ci95_diff_hi&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">hi</span><span class="p">),</span>
+            <span class="s2">&quot;p_two_sided&quot;</span><span class="p">:</span> <span class="n">p_two</span><span class="p">,</span>
+            <span class="s2">&quot;p_fmt&quot;</span><span class="p">:</span> <span class="n">p_fmt_pow10</span><span class="p">(</span><span class="n">p_two</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="n">n_boot</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="n">tbl_pvals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rowsP</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;p_two_sided&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Kendall τ on bootstrap rank strings</span>
+    <span class="n">baseline</span> <span class="o">=</span> <span class="n">rank_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">taus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kendall_tau_a</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &gt; &quot;</span><span class="p">),</span> <span class="n">baseline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &gt; &quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">rs</span> <span class="ow">in</span> <span class="n">rank_strings</span><span class="p">])</span>
+    <span class="n">rng2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+    <span class="n">perms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &gt; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rng2</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">cand_names</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">)]</span>
+    <span class="n">taus_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kendall_tau_a</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &gt; &quot;</span><span class="p">),</span> <span class="n">baseline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &gt; &quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span><span class="p">])</span>
+    <span class="n">p_tau</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">taus_null</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">taus</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">taus_null</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">taus</span><span class="p">)))</span>
+    <span class="n">kendall_summary</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;baseline&quot;</span><span class="p">:</span> <span class="n">baseline</span><span class="p">,</span>
+        <span class="s2">&quot;mean_tau&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">taus</span><span class="p">)),</span>
+        <span class="s2">&quot;sd_tau&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">taus</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="s2">&quot;tau_ci95&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">taus</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">taus</span><span class="p">,</span><span class="mf">97.5</span><span class="p">))],</span>
+        <span class="s2">&quot;perm_null_mean&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">taus_null</span><span class="p">)),</span>
+        <span class="s2">&quot;perm_null_sd&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">taus_null</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="s2">&quot;p_value_two_sided&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p_tau</span><span class="p">)),</span>
+        <span class="s2">&quot;p_fmt&quot;</span><span class="p">:</span> <span class="n">p_fmt_pow10</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p_tau</span><span class="p">)),</span> <span class="n">digits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="n">n_boot</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">weights_out</span> <span class="o">=</span> <span class="p">({</span><span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">w_history</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;sd&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">w_history</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_history</span><span class="p">)}</span>
+                   <span class="k">if</span> <span class="n">refit_weights</span> <span class="k">else</span> <span class="n">weights_fixed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weights_out</span><span class="p">,</span> <span class="n">tbl_stats_R</span><span class="p">,</span> <span class="n">tbl_stats_G</span><span class="p">,</span> <span class="n">tbl_pvals</span><span class="p">,</span> <span class="n">rank_strings</span><span class="p">,</span> <span class="n">kendall_summary</span><span class="p">,</span> <span class="n">boot_G</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.bootstrap.grid_search" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">grid_search</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">eps_grid</span><span class="o">=</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="n">lam_grid</span><span class="o">=</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">gamma_grid</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">refit_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Grid search evaluation: sweep over (eps, lam, gamma) configurations and rank them by ranking stability.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Input table passed directly to <code>bootstrap_analysis</code>. Must contain
+columns <code>name</code>, <code>role</code>, <code>pli</code>, <code>kri</code>, <code>tli</code> with exactly
+one <code>"safe anchor"</code> and one <code>"leaky anchor"</code> row.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eps_grid</code></b>
+                  (<code>sequence of float</code>, default:
+                      <code>(0.02, 0.04, 0.06, 0.08, 0.10)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Values of <code>eps</code> (safe anchor target raw score) to sweep over.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lam_grid</code></b>
+                  (<code>sequence of float</code>, default:
+                      <code>(0.75, 0.80, 0.85, 0.90)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Values of <code>lam</code> (leaky anchor target raw score) to sweep over.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gamma_grid</code></b>
+                  (<code>sequence of float</code>, default:
+                      <code>(1e-4, 1e-3, 1e-2)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Values of <code>gamma</code> (ridge regularization strength) to sweep over.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>n_boot</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>100</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Number of bootstrap replicates per configuration.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.01</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Jitter standard deviation.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>w0</code></b>
+                  (<code>sequence of float</code>, default:
+                      <code>(0, 0, 0)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Ridge regularization initial weights.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>step</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.01</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Weight grid resolution.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>refit_weights</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Whether to refit weights on every bootstrap replicate. Defaults
+to <code>True</code> here (unlike <code>bootstrap_analysis</code>'s default of
+<code>False</code>) so the grid search reflects weight uncertainty as well
+as score uncertainty. When <code>True</code>, the output DataFrame includes
+per-metric weight mean and SD columns.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>random_seed</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>123</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Random seed.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+              –
+              <div class="doc-md-description">
+                <p>One row per (eps, lam, gamma) combination, sorted descending by
+<code>(mean_tau, modal_prop)</code>. Columns:</p>
+<ul>
+<li><code>eps</code>, <code>lam</code>, <code>gamma</code>: the hyperparameter values for this
+  configuration.</li>
+<li><code>mean_tau</code>, <code>sd_tau</code>: mean and SD of Kendall tau-a across
+  bootstrap replicates relative to the baseline ranking.</li>
+<li><code>tau_ci_lo</code>, <code>tau_ci_hi</code>: 95% CI for tau.</li>
+<li><code>p_tau</code>: two-sided permutation p-value for the Kendall tau
+  test. </li>
+<li><code>modal_rank</code>: the most frequently occurring ranking string
+  ("A &gt; B &gt; C &gt; ...") across all <code>n_boot</code> replicates.</li>
+<li><code>modal_prop</code>: fraction of replicates that produced
+  <code>modal_rank</code>.</li>
+<li><code>N_boot</code>: number of bootstrap replicates (always equals <code>n_boot</code>).</li>
+<li><code>w_PLI_mean</code>, <code>w_KRI_mean</code>, <code>w_TLI_mean</code>,
+  <code>w_PLI_sd</code>, <code>w_KRI_sd</code>, <code>w_TLI_sd</code> <em>(only when</em>
+  <code>refit_weights=True</code> <em>)</em>: mean and SD of each fitted weight
+  across bootstrap replicates.</li>
+</ul>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\bootstrap.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">grid_search</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">eps_grid</span><span class="o">=</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">),</span> <span class="n">lam_grid</span><span class="o">=</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">),</span> <span class="n">gamma_grid</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">refit_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">123</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Grid search evaluation: sweep over (eps, lam, gamma) configurations and rank them by ranking stability.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">        Input table passed directly to ``bootstrap_analysis``. Must contain</span>
+<span class="sd">        columns ``name``, ``role``, ``pli``, ``kri``, ``tli`` with exactly</span>
+<span class="sd">        one ``&quot;safe anchor&quot;`` and one ``&quot;leaky anchor&quot;`` row.</span>
+<span class="sd">    eps_grid : sequence of float, default=(0.02, 0.04, 0.06, 0.08, 0.10)</span>
+<span class="sd">        Values of ``eps`` (safe anchor target raw score) to sweep over.</span>
+<span class="sd">    lam_grid : sequence of float, default=(0.75, 0.80, 0.85, 0.90)</span>
+<span class="sd">        Values of ``lam`` (leaky anchor target raw score) to sweep over.</span>
+<span class="sd">    gamma_grid : sequence of float, default=(1e-4, 1e-3, 1e-2)</span>
+<span class="sd">        Values of ``gamma`` (ridge regularization strength) to sweep over.</span>
+<span class="sd">    n_boot : int, default=100</span>
+<span class="sd">        Number of bootstrap replicates per configuration.</span>
+<span class="sd">    sigma : float, default=0.01</span>
+<span class="sd">        Jitter standard deviation.</span>
+<span class="sd">    w0 : sequence of float, default=(0, 0, 0)</span>
+<span class="sd">        Ridge regularization initial weights.</span>
+<span class="sd">    step : float, default=0.01</span>
+<span class="sd">        Weight grid resolution.</span>
+<span class="sd">    refit_weights : bool, default=True</span>
+<span class="sd">        Whether to refit weights on every bootstrap replicate. Defaults</span>
+<span class="sd">        to ``True`` here (unlike ``bootstrap_analysis``&#39;s default of</span>
+<span class="sd">        ``False``) so the grid search reflects weight uncertainty as well</span>
+<span class="sd">        as score uncertainty. When ``True``, the output DataFrame includes</span>
+<span class="sd">        per-metric weight mean and SD columns.</span>
+<span class="sd">    random_seed : int, default=123</span>
+<span class="sd">        Random seed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        One row per (eps, lam, gamma) combination, sorted descending by</span>
+<span class="sd">        ``(mean_tau, modal_prop)``. Columns:</span>
+
+<span class="sd">        - ``eps``, ``lam``, ``gamma``: the hyperparameter values for this</span>
+<span class="sd">          configuration.</span>
+<span class="sd">        - ``mean_tau``, ``sd_tau``: mean and SD of Kendall tau-a across</span>
+<span class="sd">          bootstrap replicates relative to the baseline ranking.</span>
+<span class="sd">        - ``tau_ci_lo``, ``tau_ci_hi``: 95% CI for tau.</span>
+<span class="sd">        - ``p_tau``: two-sided permutation p-value for the Kendall tau</span>
+<span class="sd">          test. </span>
+<span class="sd">        - ``modal_rank``: the most frequently occurring ranking string</span>
+<span class="sd">          (&quot;A &gt; B &gt; C &gt; ...&quot;) across all ``n_boot`` replicates.</span>
+<span class="sd">        - ``modal_prop``: fraction of replicates that produced</span>
+<span class="sd">          ``modal_rank``.</span>
+<span class="sd">        - ``N_boot``: number of bootstrap replicates (always equals ``n_boot``).</span>
+<span class="sd">        - ``w_PLI_mean``, ``w_KRI_mean``, ``w_TLI_mean``,</span>
+<span class="sd">          ``w_PLI_sd``, ``w_KRI_sd``, ``w_TLI_sd`` *(only when*</span>
+<span class="sd">          ``refit_weights=True`` *)*: mean and SD of each fitted weight</span>
+<span class="sd">          across bootstrap replicates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">gam</span> <span class="ow">in</span> <span class="n">gamma_grid</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">eps</span> <span class="ow">in</span> <span class="n">eps_grid</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lam_grid</span><span class="p">:</span>
+                <span class="n">weights_info</span><span class="p">,</span> <span class="n">tblR</span><span class="p">,</span> <span class="n">tblG</span><span class="p">,</span> <span class="n">tblP</span><span class="p">,</span> <span class="n">ranks</span><span class="p">,</span> <span class="n">kend</span><span class="p">,</span> <span class="n">boot_G</span> <span class="o">=</span> <span class="n">bootstrap_analysis</span><span class="p">(</span>
+                    <span class="n">df</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="n">n_boot</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gam</span><span class="p">,</span> <span class="n">w0</span><span class="o">=</span><span class="n">w0</span><span class="p">,</span>
+                    <span class="n">refit_weights</span><span class="o">=</span><span class="n">refit_weights</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span>
+                <span class="p">)</span>
+
+                <span class="c1"># modal ranking across bootstraps</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span>
+                <span class="n">modal_rank</span><span class="p">,</span> <span class="n">modal_freq</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">modal_prop</span> <span class="o">=</span> <span class="n">modal_freq</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span>
+
+                <span class="c1"># pull Kendall summary</span>
+                <span class="n">mean_tau</span>   <span class="o">=</span> <span class="n">kend</span><span class="p">[</span><span class="s2">&quot;mean_tau&quot;</span><span class="p">]</span>
+                <span class="n">sd_tau</span>     <span class="o">=</span> <span class="n">kend</span><span class="p">[</span><span class="s2">&quot;sd_tau&quot;</span><span class="p">]</span>
+                <span class="n">ci_lo</span><span class="p">,</span> <span class="n">ci_hi</span> <span class="o">=</span> <span class="n">kend</span><span class="p">[</span><span class="s2">&quot;tau_ci95&quot;</span><span class="p">]</span>
+                <span class="n">p_tau</span>      <span class="o">=</span> <span class="n">kend</span><span class="p">[</span><span class="s2">&quot;p_value_two_sided&quot;</span><span class="p">]</span>
+
+                <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="n">eps</span><span class="p">,</span> <span class="s2">&quot;lam&quot;</span><span class="p">:</span> <span class="n">lam</span><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="n">gam</span><span class="p">,</span>
+                    <span class="s2">&quot;mean_tau&quot;</span><span class="p">:</span> <span class="n">mean_tau</span><span class="p">,</span> <span class="s2">&quot;sd_tau&quot;</span><span class="p">:</span> <span class="n">sd_tau</span><span class="p">,</span>
+                    <span class="s2">&quot;tau_ci_lo&quot;</span><span class="p">:</span> <span class="n">ci_lo</span><span class="p">,</span> <span class="s2">&quot;tau_ci_hi&quot;</span><span class="p">:</span> <span class="n">ci_hi</span><span class="p">,</span>
+                    <span class="s2">&quot;p_tau&quot;</span><span class="p">:</span> <span class="n">p_tau</span><span class="p">,</span>
+                    <span class="c1">#&quot;p_tau_10^-a&quot;: p_to_pow10_nearest(p_tau, B), TO CHANGE</span>
+                    <span class="s2">&quot;modal_rank&quot;</span><span class="p">:</span> <span class="n">modal_rank</span><span class="p">,</span>
+                    <span class="s2">&quot;modal_prop&quot;</span><span class="p">:</span> <span class="n">modal_prop</span><span class="p">,</span>
+                    <span class="s2">&quot;N_boot&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="c1"># if refitting weights, also emit their mean/sd (optional)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weights_info</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                        <span class="s2">&quot;w_PLI_mean&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">weights_info</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="s2">&quot;w_KRI_mean&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">weights_info</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                        <span class="s2">&quot;w_TLI_mean&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">weights_info</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span>
+                        <span class="s2">&quot;w_PLI_sd&quot;</span><span class="p">:</span>   <span class="nb">float</span><span class="p">(</span><span class="n">weights_info</span><span class="p">[</span><span class="s2">&quot;sd&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="s2">&quot;w_KRI_sd&quot;</span><span class="p">:</span>   <span class="nb">float</span><span class="p">(</span><span class="n">weights_info</span><span class="p">[</span><span class="s2">&quot;sd&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                        <span class="s2">&quot;w_TLI_sd&quot;</span><span class="p">:</span>   <span class="nb">float</span><span class="p">(</span><span class="n">weights_info</span><span class="p">[</span><span class="s2">&quot;sd&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span>
+                    <span class="p">})</span>
+                <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;mean_tau&quot;</span><span class="p">,</span> <span class="s2">&quot;modal_prop&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.bootstrap.kendall_tau_a" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">kendall_tau_a</span><span class="p">(</span><span class="n">rank1_names</span><span class="p">,</span> <span class="n">rank2_names</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Compute Kendall's coefficient between two ranked orderings of the same items.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>rank1_names</code></b>
+                  (<code>list of str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Item names in the order defined by ranking 1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rank2_names</code></b>
+                  (<code>list of str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Item names in the order defined by ranking 2.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="float">float</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Kendall's rank coefficient.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\bootstrap.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">kendall_tau_a</span><span class="p">(</span><span class="n">rank1_names</span><span class="p">,</span> <span class="n">rank2_names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Kendall&#39;s coefficient between two ranked orderings of the same items.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rank1_names : list of str</span>
+<span class="sd">        Item names in the order defined by ranking 1.</span>
+<span class="sd">    rank2_names : list of str</span>
+<span class="sd">        Item names in the order defined by ranking 2.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Kendall&#39;s rank coefficient.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rank1_names</span><span class="p">)}</span>
+    <span class="n">idx2</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rank2_names</span><span class="p">)}</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">idx1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)):</span>
+            <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">names</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">idx1</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">-</span><span class="n">idx1</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">idx2</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">-</span><span class="n">idx2</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">s1</span><span class="o">*</span><span class="n">s2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">C</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">s1</span><span class="o">*</span><span class="n">s2</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">D</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">C</span><span class="o">-</span><span class="n">D</span><span class="p">)</span><span class="o">/</span><span class="n">denom</span> <span class="k">if</span> <span class="n">denom</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.bootstrap.p_fmt_pow10" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">p_fmt_pow10</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Format a p-value as a scientific-notation string with a base-10 exponent.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The p-value to format.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>digits</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Number of decimal places to show.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>n_boot</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Number of bootstrap replicates used to compute p. When p
+is exactly 0.0, the minimum detectable p-value is approximately
+1/B, so the returned string is formatted as "&lt;1x10^-a".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="str">str</span></code>
+              –
+              <div class="doc-md-description">
+                <p>The formatted string.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\bootstrap.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">p_fmt_pow10</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a p-value as a scientific-notation string with a base-10 exponent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : float</span>
+<span class="sd">        The p-value to format. </span>
+<span class="sd">    digits : int, default=1</span>
+<span class="sd">        Number of decimal places to show.</span>
+<span class="sd">    n_boot : int, optional</span>
+<span class="sd">        Number of bootstrap replicates used to compute p. When p</span>
+<span class="sd">        is exactly 0.0, the minimum detectable p-value is approximately</span>
+<span class="sd">        1/B, so the returned string is formatted as &quot;&lt;1x10^-a&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The formatted string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_boot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&lt;1x10^-∞&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">n_boot</span><span class="p">)))</span>  <span class="c1"># min detectable ~ 1/B</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;1x10^-</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># use scientific notation then reformat</span>
+    <span class="n">m_str</span><span class="p">,</span> <span class="n">e_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">digits</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">)</span>  <span class="c1"># one extra digit for rounding</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">m_str</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">e_str</span><span class="p">)</span>  <span class="c1"># typically negative</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">digits</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">x10^</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="prismg.bootstrap.rank_from_scores" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">rank_from_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Sort candidate names from highest to lowest score.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>scores</code></b>
+                  (<code>sequence of float</code>)
+              –
+              <div class="doc-md-description">
+                <p>Numeric scores for each candidate.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>names</code></b>
+                  (<code>sequence of str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Candidate identifiers corresponding to each score.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>list of str</code>
+              –
+              <div class="doc-md-description">
+                
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>prismg\bootstrap.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rank_from_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort candidate names from highest to lowest score.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scores : sequence of float</span>
+<span class="sd">        Numeric scores for each candidate.</span>
+<span class="sd">    names : sequence of str</span>
+<span class="sd">        Candidate identifiers corresponding to each score.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">order</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../score/" class="btn btn-neutral float-left" title="Score"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../utils/" class="btn btn-neutral float-right" title="Utils">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/alejocrojo09/prismg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../score/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../utils/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
