@@ -4,7 +4,7 @@ import numpy as np
 from typing import Dict, Iterable, Tuple
 
 from prismg.utils.grm import standardize_by_af, compute_grm, _symmetrize
-from score import clamp01, _aggregate
+from prismg.score import clamp01, _aggregate
 
 def _js_divergence(p: np.ndarray, q: np.ndarray, eps: float = 1e-12) -> float:
     """Compute the Jensen-Shannon divergence between two non-negative vectors.
@@ -347,7 +347,7 @@ def hap_collision_risk(G_syn: np.ndarray, var_chr: Iterable, G_ho: np.ndarray, *
     n_boot : int, default=200
         Number of bootstrap replicates.
     random_seed : int, default=123
-       Random seed.
+        Random seed.
  
     Returns
     -------
@@ -439,7 +439,7 @@ def spectral_risk(K_syn: np.ndarray, K_base: np.ndarray) -> Tuple[float, Dict[st
     r = 0.0 if s <= s0 else (s - s0) / (s + 1e-12)
     return clamp01(r), dict(obs=s, base=s0)
 
-def compute_kri(G_tr, G_ho, G_syn, var_chr, theta: float = 0.125, replay_n_bins: int = 25, replay_upper: float = 0.5, ike_thetas: Iterable[float] = (0.10, 0.125, 0.25), n_boot: int = 100, random_seed: int = 123, agg: str = "max") -> Dict:
+def compute_kri(G_tr, G_ho, G_syn, var_chr, theta: float = 0.125, replay_n_bins: int = 25, replay_upper: float = 0.5, ike_thetas: Iterable[float] = (0.10, 0.125, 0.25), window_k = 8, stride = 4, min_poly = 6, n_boot: int = 100, random_seed: int = 123, agg: str = "max") -> Dict:
     """Compute the full Kinship Risk Index (KRI) for a synthetic cohort.
  
     Parameters
@@ -464,7 +464,13 @@ def compute_kri(G_tr, G_ho, G_syn, var_chr, theta: float = 0.125, replay_n_bins:
     ike_thetas : iterable of float, default=(0.10, 0.125, 0.25)
         Kinship thresholds for the IKE sub-score. Multiple thresholds
         are evaluated and the worst-case is taken.
-    n_boot : int, default=200
+    window_k : int, default=8
+        Window size in SNPs.
+    stride : int, default=4
+        Window stride.
+    min_poly : int, default=6
+        Minimum polymorphic sites per window.
+    n_boot : int, default=100
         Number of bootstrap replicates for all sub-scores.
     random_seed : int, default=123
         Random seed.
@@ -514,7 +520,7 @@ def compute_kri(G_tr, G_ho, G_syn, var_chr, theta: float = 0.125, replay_n_bins:
     )
 
     # Micro-haplotype collisions
-    r_HAP, hap_info = hap_collision_risk(G_syn, var_chr, G_ho=G_ho, window_k=8, stride=4, min_poly=6, n_boot=n_boot, random_seed=random_seed)
+    r_HAP, hap_info = hap_collision_risk(G_syn, var_chr, G_ho=G_ho, window_k= window_k, stride=stride, min_poly=min_poly, n_boot=n_boot, random_seed=random_seed)
 
     # Spectral anomaly
     r_SPEC, spec_info = spectral_risk(K_syn, K_ho)

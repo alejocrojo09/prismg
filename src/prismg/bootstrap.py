@@ -1,16 +1,11 @@
 import math
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+
 from itertools import combinations
 from collections import Counter
 
-from score import clamp01, r_raw, calibrate_to_prism, fit_weights_anchor
-
-from matplotlib.colors import Normalize
-from matplotlib.cm import get_cmap, ScalarMappable
-
-plt.rcParams.update({"figure.dpi": 160, "font.size": 12})
+from prismg.score import r_raw, calibrate_to_prism, fit_weights_anchor
 
 def rank_from_scores(scores, names):
     """Sort candidate names from highest to lowest score.

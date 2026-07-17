@@ -1,0 +1,46 @@
+site_name: PRISM-G
+site_url: https://prismg.github.io/
+repo_url: https://github.com/alejocrojo09/prismg
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: true
+            show_root_full_path: false
+            show_root_members_full_path: false
+            docstring_style: numpy
+  - mkdocs-jupyter
+
+nav:
+  - Overview: "index.md"
+  - Installation: "installation.md"
+  - User Guide: 
+    - Setup: "usage.md"
+    - Estimating PRISM-G Components: "components.ipynb"
+    - Calculating the Privacy Risk Score: "score.ipynb"
+    - Generating a Privacy-Utility Trade-off Curve: "ancestry.ipynb"
+    - Diagnostics Using Proximity Leakage Metrics: "diagnostics.ipynb"
+    - Generating the Safe and Leaky Anchors: "anchors.ipynb"
+  - API:
+    - IO: api/io.md
+    - Metrics: api/metrics.md
+    - Score: api/score.md
+    - Bootstrap: api/bootstrap.md
+    - Utils: api/utils.md
+
+
+theme: readthedocs
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+

@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import Dict, Iterable, Tuple
 
 import numpy as np
-from score import _aggregate
+from prismg.score import _aggregate
 
 from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import roc_auc_score

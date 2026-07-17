@@ -6,7 +6,7 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
 
 from prismg.utils.grm import standardize_by_af, filter_monomorphic
-from score import clamp01, _aggregate
+from prismg.score import clamp01, _aggregate
 
 def fit_pca(X, n_components: int = 10, random_seed: int = 123, randomized: bool = True):
     """Fit a PCA model and return both the fitted model and the projected data.
@@ -196,7 +196,7 @@ def compute_pli(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, n_compone
         Synthetic genotype matrix to evaluate.
     n_components : int, default=10
         Number of principal components to use.
-    random_state : int, default=123
+    random_seed : int, default=123
         Random seed.
     q : float, default=0.01
         Quantile level for the quantile-ratio sub-score.
@@ -216,7 +216,6 @@ def compute_pli(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, n_compone
         Aggregation method for combining ``r_p`` and ``r_A`` into the
         final PLI, forwarded to ``pli_metrics``. One of ``"max"``,
         ``"mean"``, or ``"median"``.
- 
     Returns
     -------
     dict

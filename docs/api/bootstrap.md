@@ -1,0 +1,5 @@
+# Bootstrap
+
+---
+
+::: prismg.bootstrap

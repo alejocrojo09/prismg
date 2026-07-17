@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import List, Optional, Tuple
 import numpy as np
-import gzip
 
 from prismg.io.vcf_reader import load_vcf
  

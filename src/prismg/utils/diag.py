@@ -183,7 +183,7 @@ def scan_pli_stability(G_tr: np.ndarray, G_ho: np.ndarray, G_syn: np.ndarray, *,
 
 def _resolve_df_and_order(df: Optional[pd.DataFrame], d_syn: Optional[np.ndarray], d_real: Optional[np.ndarray], sample_names: Optional[Sequence[str]], sort_by: str, top_k: Optional[int]) -> pd.DataFrame:
     """Build or validate the per-sample table, apply sort and optional top-k.
-
+ 
     Parameters
     ----------
     df : pd.DataFrame, optional
@@ -202,9 +202,6 @@ def _resolve_df_and_order(df: Optional[pd.DataFrame], d_syn: Optional[np.ndarray
           (largest margin first).
         - "ratio": sort by ``d_syn / d_real`` ascending
           (smallest ratio first).
-        - "rank": sort by ``rank_s_ratio`` ascending
-          (most at risk first).
-        - "index": preserve existing row order.
     top_k : int, optional
         If provided, truncate to the first ``top_k`` rows after sorting.
  
@@ -220,28 +217,26 @@ def _resolve_df_and_order(df: Optional[pd.DataFrame], d_syn: Optional[np.ndarray
     else:
         if d_syn is not None or d_real is not None:
             raise ValueError("Pass `df` OR raw arrays, not both.")
-
+ 
     sort_map = {
         "margin": ("margin_dreal_minus_dsyn", False),
         "ratio":  ("ratio_dsyn_dreal",        True),
-        "index":  (None,                       None),
-        "rank":   ("rank_s_ratio",             True),
     }
     if sort_by not in sort_map:
         raise ValueError(f"sort_by must be one of {list(sort_map)}")
-
+ 
     col, asc = sort_map[sort_by]
-    df = df.sort_values(col, ascending=asc).reset_index(drop=True) if col else df
-
+    df = df.sort_values(col, ascending=asc).reset_index(drop=True)
+ 
     if top_k is not None:
         df = df.iloc[: int(top_k)].reset_index(drop=True)
-
+ 
     return df
-
-
+ 
+ 
 def plot_dsyn_dreal_per_sample(d_syn: Optional[np.ndarray] = None, d_real: Optional[np.ndarray] = None, *, df: Optional[pd.DataFrame] = None, sample_names: Optional[Sequence[str]] = None, sort_by: str = "margin", top_k: Optional[int] = None, ax: Optional[plt.Axes] = None, title: str = "PLI per-sample distances") -> Tuple[plt.Figure, plt.Axes, pd.DataFrame]:
     """Plot per-holdout-sample ``d_syn`` and ``d_real`` as a paired line chart.
-
+ 
     Parameters
     ----------
     d_syn : np.ndarray, optional
@@ -255,8 +250,7 @@ def plot_dsyn_dreal_per_sample(d_syn: Optional[np.ndarray] = None, d_real: Optio
         arrays.
     sort_by : str, default="margin"
         How to order samples on the x-axis. One of ``"margin"``,
-        ``"ratio"``, ``"rank"``, ``"index"`` (see
-        ``_resolve_df_and_order``).
+        ``"ratio"`` (see ``_resolve_df_and_order``).
     top_k : int, optional
         Restrict the plot to the ``top_k`` most identifiable samples
         after sorting. Useful for large holdout cohorts.
@@ -276,15 +270,15 @@ def plot_dsyn_dreal_per_sample(d_syn: Optional[np.ndarray] = None, d_real: Optio
         to produce the plot.
     """
     df_plot = _resolve_df_and_order(df, d_syn, d_real, sample_names, sort_by, top_k)
-
+ 
     x      = np.arange(len(df_plot))
     labels = df_plot["sample"].tolist()
-
+ 
     if ax is None:
         fig, ax = plt.subplots(figsize=(max(6, len(x) * 0.25), 4))
     else:
         fig = ax.figure
-
+ 
     ax.plot(x, df_plot["d_real"], marker="o", label="$d_{real}$ (HO baseline)")
     ax.plot(x, df_plot["d_syn"],  marker="o", label="$d_{syn}$ (nearest SYN)")
     ax.set_xlabel("HO samples")
@@ -294,10 +288,10 @@ def plot_dsyn_dreal_per_sample(d_syn: Optional[np.ndarray] = None, d_real: Optio
     ax.set_xticklabels(labels, rotation=90, fontsize=8)
     ax.legend()
     ax.grid(True, alpha=0.2)
-
+ 
     return fig, ax, df_plot
-
-
+ 
+ 
 def plot_identifiability_scatter(d_syn: Optional[np.ndarray] = None, d_real: Optional[np.ndarray] = None, *, df: Optional[pd.DataFrame] = None, sample_names: Optional[Sequence[str]] = None, annotate_top_k: int = 0, ax: Optional[plt.Axes] = None, title: str = "PLI identifiability") -> Tuple[plt.Figure, plt.Axes, pd.DataFrame]:
     """Scatter plot of ``d_syn`` vs ``d_real`` with the identity diagonal.
  
@@ -331,36 +325,40 @@ def plot_identifiability_scatter(d_syn: Optional[np.ndarray] = None, d_real: Opt
         The full per-sample DataFrame sorted by ``rank_s_ratio``
         (most at risk first).
     """
-    df_full = _resolve_df_and_order(df, d_syn, d_real, sample_names, "rank", None)
-
+    # `_resolve_df_and_order` only exposes "margin"/"ratio" sort keys now,
+    # so build/validate the table via that helper (order doesn't matter
+    # here since we re-sort by risk rank immediately below).
+    df_full = _resolve_df_and_order(df, d_syn, d_real, sample_names, "margin", None)
+    df_full = df_full.sort_values("rank_s_ratio", ascending=True).reset_index(drop=True)
+ 
     n     = len(df_full)
     below = df_full["ap_flag"].sum()
     frac  = below / n
-
+ 
     if ax is None:
         fig, ax = plt.subplots(figsize=(6, 6))
     else:
         fig = ax.figure
-
+ 
     ax.scatter(df_full["d_real"], df_full["d_syn"], s=18)
-
+ 
     lo = float(min(df_full["d_real"].min(), df_full["d_syn"].min()))
     hi = float(max(df_full["d_real"].max(), df_full["d_syn"].max()))
-
+ 
     ax.plot([lo, hi], [lo, hi], linestyle="--", color="grey")
-
+ 
     ax.set_xlabel("$d_{real}$ (HO 2-NN baseline)")
     ax.set_ylabel("$d_{syn}$ (nearest SYN)")
     ax.legend()
     ax.grid(True, alpha=0.2)
-
+ 
     if annotate_top_k > 0:
         top = df_full.nsmallest(int(annotate_top_k), "rank_s_ratio")
         for _, row in top.iterrows():
             ax.annotate(str(row["sample"]), (row["d_real"], row["d_syn"]), fontsize=8)
-
+ 
     return fig, ax, df_full
-
+ 
 def pli_diagnostics(G_tr: np.ndarray,G_ho: np.ndarray, G_syn: np.ndarray,*, ho_names: Optional[Sequence[str]] = None, n_components: int = 10, q: float = 0.01, random_seed: int = 123, boot: int = 200) -> Dict[str, object]:
     """Run a full PLI diagnostic suite in a single call.
  
@@ -411,17 +409,17 @@ def pli_diagnostics(G_tr: np.ndarray,G_ho: np.ndarray, G_syn: np.ndarray,*, ho_n
         q=q,
         random_seed=random_seed,
     )
-
+ 
     df_samples = per_sample_pli_table(out["d_syn"], out["d_real"], sample_names=ho_names)
     df_boot    = bootstrap_pli_consistency(out["d_syn"], out["d_real"], q=q, boot = boot, random_seed=random_seed)
-
+ 
     return {
         "pli":        out,
         "driver":     "ratio_tail" if out["r_p"] >= out["r_A"] else "adv_proximity",
         "per_sample": df_samples,
         "boot":       df_boot,
     }
-
+ 
 __all__ = ["per_sample_pli_table",
            "bootstrap_pli_consistency",
            "scan_pli_stability",
