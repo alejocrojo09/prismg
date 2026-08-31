@@ -20,4 +20,4 @@ PRISM-G is a model-agnostic framework that can be used to evaluate the privacy e
 
 If you use PRISM-G in your work, you can cite:
 
-> Alejandro Correa Rojo, Yves Moreau, Gökhan Ertaylan, PRISM-G: an interpretable privacy scoring framework for assessing risk in synthetic human genome data, *Bioinformatics*, Volume XX, Issue XX, August XX, Pages XX-XX, https://doi.org/10.1093/bioinformatics/btag377.  
+> Alejandro Correa Rojo, Yves Moreau, Gökhan Ertaylan, PRISM-G: an interpretable privacy scoring framework for assessing risk in synthetic human genome data, *Bioinformatics*, Volume 42, Issue Supplement_2, August 21-2026, https://doi.org/10.1093/bioinformatics/btag377.  

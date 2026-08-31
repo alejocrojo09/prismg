@@ -1,6 +1,6 @@
 # PRISM-G: Privacy Risk Integrated Score for Multi-representation Genomes
 
-This repository accompanies the PRISM-G pre-print, **“PRISM-G: an interpretable privacy scoring method for assessing risk in synthetic human genome data”** (https://www.biorxiv.org/content/10.1101/2025.10.17.682995). It includes the Python package implementing PRISM-G, along with the datasets and reproducible procedures used in the manuscript.
+This repository accompanies the PRISM-G paper, **“PRISM-G: an interpretable privacy scoring method for assessing risk in synthetic human genome data”** (https://doi.org/10.1093/bioinformatics/btag377). It includes the Python package implementing PRISM-G, along with the datasets and reproducible procedures used in the manuscript.
 
 ## Overview
 
@@ -30,7 +30,7 @@ You can install PRISM-G by using pip with the following command in the source di
 
 ## Usage
 
-We provide a tutorial notebook demonstrating how to use the PRISM-G package to compute privacy scores, using sample genomes from the 1000 Genomes Project. For synthetic datasets, the tutorial includes examples generated with deep learning models (GAN and RBM) from Yelmen et al. (https://gitlab.inria.fr/ml_genetics/public/artificial_genomes) and a logic-based SAT solver (Genomator) from Burgess et al. Additionally, we include code to generate both *safe* synthetic data using a binomial sampler and *leaky* synthetic data using a copycat generator, enabling users to reproduce the baselines used in the manuscript.
+Documentation and a tutorial can be accessed at https://alejocrojo09.github.io/prismg. We provide a guide illustrating how to use the PRISM-G package to compute privacy scores, using sample genomes from the 1000 Genomes Project. For synthetic datasets, the tutorial includes examples generated with deep learning models (GAN and RBM) from Yelmen et al. (https://gitlab.inria.fr/ml_genetics/public/artificial_genomes) and a logic-based SAT solver (Genomator) from Burgess et al. Additionally, we include code to generate both *safe* synthetic data using a binomial sampler and *leaky* synthetic data using a copycat generator, enabling users to reproduce the baselines used in the manuscript.
 
 ## References
 
